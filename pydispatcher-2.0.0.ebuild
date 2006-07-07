@@ -1,6 +1,6 @@
 # Copyright (c) 2001-2003, Patrick K. O'Brien and Contributors
 # Distributed under the terms of the BSD License
-# $Header: /cvsroot/pydispatcher/pydispatch/pydispatcher-2.0.0.ebuild,v 1.1 2006/07/07 15:59:38 mcfletch Exp $
+# $Header: /cvsroot/pydispatcher/pydispatch/pydispatcher-2.0.0.ebuild,v 1.1.1.1 2006/07/07 15:59:38 mcfletch Exp $
 
 # This is a pretty trivial ebuild, as the python distutils support takes care of
 # just about everything for us.  Our only real problem is that the project name
