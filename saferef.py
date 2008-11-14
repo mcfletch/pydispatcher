@@ -120,7 +120,7 @@ class BoundMethodWeakref(object):
 		self.key = self.calculateKey( target )
 		self.weakSelf = weakref.ref(target.im_self, remove)
 		self.weakFunc = weakref.ref(target.im_func, remove)
-		self.selfName = str(target.im_self)
+		self.selfName = target.im_self.__class__.__name__
 		self.funcName = str(target.im_func.__name__)
 	def calculateKey( cls, target ):
 		"""Calculate the reference key for this reference
