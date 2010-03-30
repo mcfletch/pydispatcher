@@ -1,12 +1,12 @@
 from pydispatch.saferef import *
 
 import unittest
-class Test1( object):
+class T1( object):
 	def x( self ):
 		pass
-def test2(obj):
+def t2(obj):
 	pass
-class Test2( object ):
+class T2( object ):
 	def __call__( self, obj ):
 		pass
 class Tester (unittest.TestCase):
@@ -14,14 +14,14 @@ class Tester (unittest.TestCase):
 		ts = []
 		ss = []
 		for x in xrange( 5000 ):
-			t = Test1()
+			t = T1()
 			ts.append( t)
 			s = safeRef(t.x, self._closure )
 			ss.append( s)
-		ts.append( test2 )
-		ss.append( safeRef(test2, self._closure) )
+		ts.append( t2 )
+		ss.append( safeRef(t2, self._closure) )
 		for x in xrange( 30 ):
-			t = Test2()
+			t = T2()
 			ts.append( t)
 			s = safeRef(t, self._closure )
 			ss.append( s)
@@ -56,7 +56,7 @@ class Tester (unittest.TestCase):
 			is raised
 		"""
 		repr( self.ss[-1] )
-		
+
 	def test(self):
 		self.closureCount = 0
 		wholeI = len(self.ts)
@@ -64,7 +64,7 @@ class Tester (unittest.TestCase):
 			del self.ts[i]
 			if wholeI-i != self.closureCount:
 				"""Unexpected number of items closed, expected %s, got %s closed"""%( wholeI-i,self.closureCount)
-		
+
 	def _closure(self, ref):
 		"""Dumb utility mechanism to increment deletion counter"""
 		self.closureCount +=1
