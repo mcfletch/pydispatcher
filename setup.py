@@ -16,7 +16,7 @@ if hexversion >= 0x2030000:
 			"""Topic :: Software Development :: Libraries :: Python Modules""",
 			"""Intended Audience :: Developers""",
 		],
-		'download_url': "https://sourceforge.net/project/showfiles.php?group_id=79755",
+		#'download_url': "http://sourceforge.net/projects/pydispatcher/files/pydispatcher/",
 		'keywords': 'dispatcher,dispatch,pydispatch,event,signal,sender,receiver,propagate,multi-consumer,multi-producer,saferef,robustapply,apply',
 		'long_description' : """Dispatcher mechanism for creating event models
 

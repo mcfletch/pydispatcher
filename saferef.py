@@ -22,7 +22,7 @@ def safeRef(target, onDelete = None):
 				onDelete=onDelete
 			)
 			return reference
-	if callable(onDelete):
+	if onDelete is not None:
 		return weakref.ref(target, onDelete)
 	else:
 		return weakref.ref( target )
@@ -107,7 +107,7 @@ class BoundMethodWeakref(object):
 				pass
 			for function in methods:
 				try:
-					if callable( function ):
+					if hasattr(function, '__call__' ):
 						function( self )
 				except Exception, e:
 					try:

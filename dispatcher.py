@@ -30,14 +30,8 @@ import types, weakref
 from pydispatch import saferef, robustapply, errors
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id: dispatcher.py,v 1.1 2006/07/07 15:59:38 mcfletch Exp $"
-__version__ = "$Revision: 1.1 $"[11:-2]
-
-try:
-	True
-except NameError:
-	True = 1==1
-	False = 1==0
+__cvsid__ = "$Id: dispatcher.py,v 1.2 2010/03/30 15:32:09 mcfletch Exp $"
+__version__ = "$Revision: 1.2 $"[11:-2]
 
 class _Parameter:
 	"""Used to represent default parameter values."""
@@ -140,7 +134,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
 	if weak:
 		receiver = saferef.safeRef(receiver, onDelete=_removeReceiver)
 	senderkey = id(sender)
-	if connections.has_key(senderkey):
+	if senderkey in connections:
 		signals = connections[senderkey]
 	else:
 		connections[senderkey] = signals = {}
@@ -160,7 +154,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
 	receiverID = id(receiver)
 	# get current set, remove any current references to
 	# this receiver in the set, including back-references
-	if signals.has_key(signal):
+	if signal in signals:
 		receivers = signals[signal]
 		_removeOldBackRefs(senderkey, signal, receiver, receivers)
 	else:
@@ -296,7 +290,7 @@ def getAllReceivers( sender = Any, signal = Any ):
 		for receiver in set:
 			if receiver: # filter out dead instance-method weakrefs
 				try:
-					if not receivers.has_key( receiver ):
+					if receiver not in receivers:
 						receivers[receiver] = 1
 						yield receiver
 				except TypeError:
@@ -377,28 +371,29 @@ def _removeReceiver(receiver):
 		# During module cleanup the mapping will be replaced with None
 		return False
 	backKey = id(receiver)
-	for senderkey in sendersBack.get(backKey,()):
-		try:
-			signals = connections[senderkey].keys()
-		except KeyError,err:
-			pass
-		else:
-			for signal in signals:
-				try:
-					receivers = connections[senderkey][signal]
-				except KeyError:
-					pass
-				else:
-					try:
-						receivers.remove( receiver )
-					except Exception, err:
-						pass
-				_cleanupConnections(senderkey, signal)
 	try:
-		del sendersBack[ backKey ]
-	except KeyError:
-		pass
-			
+		backSet = sendersBack.pop(backKey)
+	except KeyError, err:
+		return False 
+	else:
+		for senderkey in backSet:
+			try:
+				signals = connections[senderkey].keys()
+			except KeyError,err:
+				pass
+			else:
+				for signal in signals:
+					try:
+						receivers = connections[senderkey][signal]
+					except KeyError:
+						pass
+					else:
+						try:
+							receivers.remove( receiver )
+						except Exception, err:
+							pass
+					_cleanupConnections(senderkey, signal)
+
 def _cleanupConnections(senderkey, signal):
 	"""Delete any empty signals for senderkey. Delete senderkey if empty."""
 	try:
