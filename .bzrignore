@@ -1,0 +1,6 @@
+dist
+pydispatcher-1.0.0.ebuild
+pydispatcher-2.0.0.ebuild
+*.egg-info
+*.e4?
+.eric4project
