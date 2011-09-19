@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 """Script to automatically generate OpenGLContext documentation"""
 import pydoc2
 
