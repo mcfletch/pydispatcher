@@ -60,7 +60,9 @@ if __name__ == "__main__":
         version = version,
         description= "Multi-producer-multi-consumer signal dispatching mechanism",
         author = "Patrick K. O'Brien",
+        maintainer = "Mike C. Fletcher",
         author_email = "pydispatcher-devel@lists.sourceforge.net",
+        maintainer_email = "pydispatcher-devel@lists.sourceforge.net",
         url = "http://pydispatcher.sourceforge.net",
         license = "BSD-style, see license.txt for details",
 
@@ -73,8 +75,7 @@ if __name__ == "__main__":
         ],
 
         options = {
-            'sdist':{'use_defaults':0, 'force_manifest':1},
-            "install_lib":{"compile":0, "optimize":0},
+            'sdist':{'use_defaults':0, 'force_manifest':1,'formats': ['gztar','zip'],},
             'bdist_rpm':{
                 'group':'Libraries/Python',
                 'provides':'python-dispatcher',
