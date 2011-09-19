@@ -12,7 +12,7 @@ except ImportError:
     from distutils.core import setup
 
 extra_commands = {}
-extra_arguments = {'cmdclass': extra_commands }
+extra_arguments = {}
 
 if sys.hexversion >= 0x2030000:
     # work around distutils complaints under Python 2.2.x
@@ -80,6 +80,8 @@ if __name__ == "__main__":
                 'requires':"python",
             },
         },
+        cmdclass = extra_commands,
+        use_2to3 = True,
         # registration metadata
         **extra_arguments
     )

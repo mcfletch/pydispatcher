@@ -1,6 +1,12 @@
 """Refactored "safe reference" from dispatcher.py"""
-import weakref, traceback
+import weakref, traceback, sys
 
+if sys.hexversion >= 0x3000000:
+    im_func = '__func__'
+    im_self = '__self__'
+else:
+    im_func = 'im_func'
+    im_self = 'im_self'
 def safeRef(target, onDelete = None):
 	"""Return a *safe* weak reference to a callable target
 
@@ -12,11 +18,11 @@ def safeRef(target, onDelete = None):
 		goes out of scope with the reference object, (either a
 		weakref or a BoundMethodWeakref) as argument.
 	"""
-	if hasattr(target, 'im_self'):
-		if target.im_self is not None:
+	if hasattr(target, im_self):
+		if getattr(target, im_self) is not None:
 			# Turn a bound method into a BoundMethodWeakref instance.
 			# Keep track of these instances for lookup by disconnect().
-			assert hasattr(target, 'im_func'), """safeRef target %r has im_self, but no im_func, don't know how to create reference"""%( target,)
+			assert hasattr(target, im_func), """safeRef target %r has %s, but no %s, don't know how to create reference"""%( target,im_self,im_func)
 			reference = BoundMethodWeakref(
 				target=target,
 				onDelete=onDelete
@@ -87,9 +93,9 @@ class BoundMethodWeakref(object):
 		"""Return a weak-reference-like instance for a bound method
 
 		target -- the instance-method target for the weak
-			reference, must have im_self and im_func attributes
+			reference, must have <im_self> and <im_func> attributes
 			and be reconstructable via:
-				target.im_func.__get__( target.im_self )
+				target.<im_func>.__get__( target.<im_self> )
 			which is true of built-in instance methods.
 		onDelete -- optional callback which will be called
 			when this weak reference ceases to be valid
@@ -118,17 +124,17 @@ class BoundMethodWeakref(object):
 						)
 		self.deletionMethods = [onDelete]
 		self.key = self.calculateKey( target )
-		self.weakSelf = weakref.ref(target.im_self, remove)
-		self.weakFunc = weakref.ref(target.im_func, remove)
-		self.selfName = target.im_self.__class__.__name__
-		self.funcName = str(target.im_func.__name__)
+		self.weakSelf = weakref.ref(getattr(target,im_self), remove)
+		self.weakFunc = weakref.ref(getattr(target,im_func), remove)
+		self.selfName = getattr(target,im_self).__class__.__name__
+		self.funcName = str(getattr(target,im_func).__name__)
 	def calculateKey( cls, target ):
 		"""Calculate the reference key for this reference
 
 		Currently this is a two-tuple of the id()'s of the
 		target object and the target function respectively.
 		"""
-		return (id(target.im_self),id(target.im_func))
+		return (id(getattr(target,im_self)),id(getattr(target,im_func)))
 	calculateKey = classmethod( calculateKey )
 	def __str__(self):
 		"""Give a friendly representation of the object"""
