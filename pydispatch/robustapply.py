@@ -55,5 +55,3 @@ def robustApply(receiver, *arguments, **named):
 			if arg not in acceptable:
 				del named[arg]
 	return receiver(*arguments, **named)
-
-			

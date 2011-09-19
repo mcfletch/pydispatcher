@@ -26,7 +26,7 @@ Internal attributes:
 		vs. the original code.)
 """
 from __future__ import generators
-import types, weakref
+import weakref
 from pydispatch import saferef, robustapply, errors
 
 __author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
@@ -373,13 +373,13 @@ def _removeReceiver(receiver):
 	backKey = id(receiver)
 	try:
 		backSet = sendersBack.pop(backKey)
-	except KeyError, err:
+	except KeyError:
 		return False 
 	else:
 		for senderkey in backSet:
 			try:
 				signals = connections[senderkey].keys()
-			except KeyError,err:
+			except KeyError:
 				pass
 			else:
 				for signal in signals:
@@ -390,7 +390,7 @@ def _removeReceiver(receiver):
 					else:
 						try:
 							receivers.remove( receiver )
-						except Exception, err:
+						except Exception:
 							pass
 					_cleanupConnections(senderkey, signal)
 
