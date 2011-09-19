@@ -1,19 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head>
-
-
-
   
-  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Python Dispatch Package</title>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>Python Dispatch Package</title>
 
-  
   
   
   <link href="style/sitestyle.css" type="text/css" rel="stylesheet">
 
   
-  <meta content="Patrick K. O'Brien" name="author"></head><body>
+  <meta content="Patrick K. O'Brien" name="author">
 
+</head><body>
 <h1>PyDispatcher</h1>
 
 <p class="introduction">PyDispatcher provides the Python programmer
@@ -22,14 +20,14 @@ routing infrastructure for use in multiple contexts.&nbsp; The
 mechanism
 of PyDispatcher started life as a highly rated <a href="http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/87056">recipe</a>
 in the <a href="http://aspn.activestate.com/ASPN/Python/Cookbook/">Python
-Cookbook</a>.&nbsp; The SourceForge <a href="https://sourceforge.net/projects/pydispatcher/">project</a> aims
+Cookbook</a>.&nbsp; The <a href="https://launchpad.net/pydispatcher">project</a>
+aims
 to include various enhancements to the recipe developed during use in
-various applications.<br>
-
+various applications.&nbsp; It is primarily maintained by <a href="http://www.vrplumber.com">Mike Fletcher</a>.&nbsp; A derivative
+of the project provides the Django web framework's "signal" system.<br>
 </p>
 
 <p>To be more concrete about what PyDispatcher does for you:<br>
-
 </p>
 
 <ul>
@@ -38,69 +36,44 @@ various applications.<br>
 registered objects (in the local process).&nbsp; It allows you to
 register any number of functions (callable objects) which can receive
 signals from senders.</li>
-
-  
   <ul>
-
     <li>registration can be for all senders, particular sending
 objects, or "anonymous" messages (messages where the sender is None)<br>
-
     </li>
-
     <li>registration can be for any signal, or particular signals</li>
-
     <li>a single signal will be delivered to all appropriate registered
 receivers, so that multiple registrations do not interfere with each
 other<br>
-
     </li>
-
-  
   </ul>
-
   <li>there is no requirement for the sender or receiver to be
 dispatcher-aware.&nbsp; Any Python object save the None object can act
 as a sender, and any callable object can act as a receiver.&nbsp; There
 is no need to inherit from a particular class or provide a particular
 interface on the object.<br>
-
   </li>
-
   <li>the system uses weak references to receivers wherever possible</li>
-
-  
   <ul>
-
     <li>object lifetimes are not affected by PyDispatcher registrations
 (that is, when your object goes away, the registrations related to the
 object also go away).&nbsp; <br>
-
     </li>
-
     <li>references to common transient objects (in particular instance
 methods) are stored as compound weak references.&nbsp; <br>
-
     </li>
-
     <li>weak references can be disabled on a
 registration-by-registration basis</li>
-
-  
   </ul>
-
   <li>allows rich signal types, signals are simply hashable objects
 used to store and retrieve sub-tables, they are otherwise opaque to the
 dispatcher mechanism</li>
-
   <li>allows sending more information when sending than any particular
 receiver can handle, dispatcher automatically culls those arguments
 which are not appropriate for the particular receiver.&nbsp; This
 allows registering very simple functions dealing with general messages,
 while still allowing natural passing of arguments to higher level
 functions.<br>
-
   </li>
-
 </ul>
 
 <p>The dispatcher mechanism is particularly useful when constructing
@@ -110,26 +83,28 @@ have the Model objects aware of the event model.</p>
 <h2>Acquisition and Installation</h2>
 
 <p>PyDispatcher is available as a standard Python distutils
-installation package from the SourceForge project <a href="https://sourceforge.net/project/showfiles.php?group_id=79755">file
-repository</a>.&nbsp; To install, unzip the source archive into a
-temporary directory and run:<br>
-
+installation package from the Python Package Index (PyPI).&nbsp; To
+install, run:<br>
 </p>
 
-<pre>python setup.py install<br></pre>
+<pre>pip install PyDispatcher<br></pre>
 
 <p>PyDispatcher does not include any binary packages, so there should
-be no issues in installation.&nbsp; To use the <a href="https://sourceforge.net/cvs/?group_id=79755">CVS version</a> of
-PyDispatcher (useful for developers of PyDispatcher), simply check out
-the module to a directory on your PythonPath.<br>
+be no issues in installation.&nbsp; PyDispatcher is maintained on the
+LaunchPad project in bzr.&nbsp; To help develop, check out the project
+like so:</p>
 
-</p>
+<pre>bzr branch lp:~mcfletch/pydispatcher/working<br></pre>
+
+<p>You can either send a pull request via LaunchPad or email a
+patch-set via:</p>
+
+<pre>bzr send --mail-to=mcfletch@vrplumber.com<br></pre>
 
 <p class="technical">PyDispatcher represents one of the more involved
 usage patterns for Python weakref objects. We have discovered a few
 problems in weakref operation of which users of the package should be
 aware.<br>
-
 </p>
 
 <p class="technical">Python 2.2.2 (and
@@ -141,7 +116,6 @@ recommended</strong> that you use <strong>Python 2.2.3</strong> or
 later
 when using PyDispatcher.&nbsp; Note that this will not address the
 following issue.<br>
-
 </p>
 
 <p class="technical">Python 2.3.2 (and earlier) has a different (even
@@ -160,7 +134,6 @@ encounter this situation.
 <p>You can find usage samples in the examples directory of the
 distribution.&nbsp; The dispatcher module's <a href="pydoc/pydispatch.dispatcher.html">reference documentation</a> is
 currently the major source of information regarding usage.<br>
-
 </p>
 
 <p>PyDispatcher welcomes contributions, suggestions, and feedback from
@@ -172,100 +145,67 @@ list</a>.</p>
 <ul>
 
   <li><a href="http://louie.berlios.de/">Louie</a></li>
-
-  
   <ul>
-
     <li>Reworked pydispatcher providing plugin infrastructure including
 Twisted and PyQt specific support</li>
-
-  
   </ul>
-
 </ul>
 
 <h2>Release Notes</h2>
 
 <ul>
 
+  <li>Version 2.0.3</li>
+  <ul>
+    <li>Support for Python 3.2 (via 2to3) added, Python 2.x is still
+the primary development target<br>
+    </li>
+  </ul>
   <li>Version 2.0.2</li>
   <ul>
     <li>Further packaging fixes.<br>
     </li>
   </ul>
-  <li>Version 2.0.1</li>
-
+  <li>Version 2.0.1 (this version and all previous versions are
+available from the old <a href="http://sourceforge.net/projects/pydispatcher/files/pydispatcher/">SourceForge
+project</a>)<br>
+  </li>
   <ul>
     <li>Packaging fixes to allow for easy_install based installation</li>
   </ul>
   <li>Version 2.0.0</li>
-
-  
   <ul>
-
     <li>Renames the top-level package to "pydispatch" to avoid
 conflicts with common conflicting "dispatch" module.</li>
-
-  
   </ul>
-
   <li>Version 1.0.3</li>
-
-  
   <ul>
-
     <li>Add "robust" module with single function sendRobust, which
 catches errors during callbacks and returns the error instances instead
 of propagating the error</li>
-
     <li>Patch bug in SafeRef deletion where traceback module has
 already been deleted by interpreter shutdown</li>
-
     <li>Patch bug in _removeReceiver where sendersBack has already been
 deleted by interpreter shutdown</li>
-
     <li>Make SafeRef pre-cache method name to allow for repr after
 cleanup of the method</li>
-
-  
   </ul>
-
   <li>Version 1.0.2</li>
-
-  
   <ul>
-
     <li>Fixes another memory leak, again wrt the back-reference table<br>
-
     </li>
-
-  
   </ul>
-
   <li>Version 1.0.1</li>
-
-  
   <ul>
-
     <li>Fixes 2 memory leaks, one regarding the back-reference table
 for receivers, the other being a failure to register all receivers
 beyond the first for deletion</li>
-
-  
   </ul>
-
   <li>Version 1.0.0</li>
-
-  
   <ul>
-
     <li>Initial SourceForge release with restructured codebase<br>
-
     </li>
-
-  
   </ul>
-
 </ul>
 
 <p class="footer">A SourceForge Open-Source project: <a href="http://sourceforge.net"><img title="" alt="SourceForge" style="border: 0px solid ; width: 88px; height: 31px;" src="http://sourceforge.net/sflogo.php?group_id=79755&amp;type=1" align="middle" border="0" height="31" width="88"></a></p>
