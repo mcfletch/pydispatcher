@@ -1,17 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head>
+
   
-  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-  <title>Python Dispatch Package</title>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Python Dispatch Package</title>
+  
 
   
   
   <link href="style/sitestyle.css" type="text/css" rel="stylesheet">
 
   
-  <meta content="Patrick K. O'Brien" name="author">
-
-</head><body>
+  <meta content="Patrick K. O'Brien" name="author"></head><body>
 <h1>PyDispatcher</h1>
 
 <p class="introduction">PyDispatcher provides the Python programmer
@@ -139,6 +138,57 @@ currently the major source of information regarding usage.<br>
 <p>PyDispatcher welcomes contributions, suggestions, and feedback from
 users in the pydispatcher-dev <a href="http://lists.sourceforge.net/lists/listinfo/pydispatcher-devel">mailing
 list</a>.</p>
+<h2>Usage</h2>
+<p>To set up a function to receive signals:</p>
+<pre>from pydispatch import dispatcher<br>SIGNAL = 'my-first-signal'<br><br>def handle_event( sender ):<br>    """Simple event handler"""<br>    print 'Signal was sent by', sender<br>dispatcher.connect( handle_event, signal=SIGNAL, sender=dispatcher.Any )<br></pre>
+<p>The use of the Any object allows the handler to listen for messages
+from any Sender or to listen to Any message being sent.&nbsp; To send
+messages:</p>
+<pre>first_sender = object()<br>second_sender = {}<br>def main( ):<br>    dispatcher.send( signal=SIGNAL, sender=first_sender )<br>    dispatcher.send( signal=SIGNAL, sender=second_sender )<br></pre>
+<p>Which causes the following to be printed:</p>
+<pre>Signal was sent by &lt;object object at 0x196a090&gt;<br>Signal was sent by {}<br></pre>
+<h3>Handler Functions</h3>
+<p>Handler functions in PyDispatcher are relatively loose in their
+definition.&nbsp; A handler can simply declare the parameters it would
+like to receive and receive only those parameters when the signal is
+sent.&nbsp; The sender can include extra parameters for those handlers
+which require them without worrying about whether a more generic
+handler can accept them:</p>
+<pre>def handle_specific_event( sender, moo ):<br>    """Handle a simple event, requiring a "moo" parameter"""<br>    print 'Specialized event for %(sender)s moo=%(moo)r'%locals()<br>dispatcher.connect( handle_specific_event, signal=SIGNAL2, sender=dispatcher.Any )<br></pre>
+<p>This connection requires that all senders of the particular signal
+send a "moo" parameter, but a handler that listens for all events and
+does not provide a "moo" parameter would silently ignore the sender
+having passed a "moo".</p>
+<p>2 parameters are always available to handler functions if they would like to use them:</p>
+<table style="text-align: left; width: 100%;" border="1" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <th>Parameter<br>
+      </th>
+      <th>Value<br>
+      </th>
+    </tr>
+    <tr>
+      <td>sender<br>
+      </td>
+      <td>Object from/for which the event was sent, can be dispatcher.Anonymous for anonymous signals<br>
+      </td>
+    </tr>
+    <tr>
+      <td>signal<br>
+      </td>
+      <td>Signal object used when sending<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Positional arguments and named arguments are passed through, but if
+positional arguments are used, they will fill in the parameters of the
+receiver in order and cause conflicts if named parameters are specified
+which match their names.&nbsp; Generally it is advisable to use named
+arguments when defining sending messages.<br>
+</p>
+
 
 <h2>Related Software</h2>
 
