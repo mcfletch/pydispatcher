@@ -20,6 +20,7 @@ if sys.hexversion >= 0x2030000:
         'classifiers': [
             """License :: OSI Approved :: BSD License""",
             """Programming Language :: Python""",
+            """Programming Language :: Python :: 3""",
             """Topic :: Software Development :: Libraries :: Python Modules""",
             """Intended Audience :: Developers""",
         ],
