@@ -1,16 +1,22 @@
 #!/usr/bin/env python
-"""Installs PyDispatcher using distutils
+"""Installs PyDispatcher using distutils (or setuptools/distribute)
 
 Run:
     python setup.py install
 to install the package from the source archive.
 """
-from setuptools import setup
-import os
-from sys import hexversion
-if hexversion >= 0x2030000:
+import sys, os
+try:
+    from setuptools import setup 
+except ImportError:
+    from distutils.core import setup
+
+extra_commands = {}
+extra_arguments = {'cmdclass': extra_commands }
+
+if sys.hexversion >= 0x2030000:
     # work around distutils complaints under Python 2.2.x
-    extraArguments = {
+    extra_arguments = {
         'classifiers': [
             """License :: OSI Approved :: BSD License""",
             """Programming Language :: Python""",
@@ -33,10 +39,12 @@ methods using weak-references.
 """,
         'platforms': ['Any'],
     }
-else:
-    extraArguments = {
-    }
-
+if sys.hexversion >= 0x3000000:
+    try:
+        from distutils.command.build_py import build_py_2to3
+        extra_commands['build_py'] = build_py_2to3
+    except ImportError:
+        pass
 
 version = [
     (line.split('=')[1]).strip().strip('"').strip("'")
@@ -72,8 +80,6 @@ if __name__ == "__main__":
                 'requires':"python",
             },
         },
-
         # registration metadata
-        **extraArguments
+        **extra_arguments
     )
-
