@@ -4,3 +4,6 @@ pydispatcher-2.0.0.ebuild
 *.egg-info
 *.e4?
 .eric4project
+__pycache__
+*.bak
+build
