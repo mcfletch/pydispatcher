@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head>
 
+
   
   <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"><title>Python Dispatch Package</title>
   
@@ -186,8 +187,15 @@ having passed a "moo".</p>
 positional arguments are used, they will fill in the parameters of the
 receiver in order and cause conflicts if named parameters are specified
 which match their names.&nbsp; Generally it is advisable to use named
-arguments when defining sending messages.<br>
-</p>
+arguments when defining sending messages.</p>
+<h3>Real World Examples</h3>
+<p>OpenGLContext uses PyDispatcher to provide a link between PyVRML97
+(model level) and OpenGLContext (the controller and view levels).&nbsp;
+Changes to fields in the model <a href="http://bazaar.launchpad.net/%7Emcfletch/pyvrml97/trunk/view/head:/vrml/field.py#L81">send events</a>, as do changes to <a href="http://bazaar.launchpad.net/%7Emcfletch/pyvrml97/trunk/view/head:/vrml/olist.py">object lists</a>.&nbsp; A <a href="http://bazaar.launchpad.net/%7Emcfletch/pyvrml97/trunk/view/head:/vrml/cache.py">cache</a> observes these changes and allows the view/model level to <a href="http://bazaar.launchpad.net/%7Emcfletch/openglcontext/trunk/view/head:/OpenGLContext/scenegraph/box.py">register dependencies</a>
+on particular fields of particular nodes.&nbsp; The result is that
+rendering code can cache data extensively and have the caches
+consistently invalidated when their data-dependencies are changed.</p>
+
 
 
 <h2>Related Software</h2>
@@ -199,6 +207,15 @@ arguments when defining sending messages.<br>
     <li>Reworked pydispatcher providing plugin infrastructure including
 Twisted and PyQt specific support</li>
   </ul>
+  <li><a href="https://code.djangoproject.com/browser/django/trunk/django/dispatch">django.dispatch (Signals)</a></li>
+  <ul>
+    <li>Rewritten with a more limited interface, but higher
+performance; requires that signals be objects of a given type, and
+eliminates Any registrations.&nbsp; Registrations are on the signal
+objects.<br>
+    </li>
+  </ul>
+
 </ul>
 
 <h2>Release Notes</h2>
