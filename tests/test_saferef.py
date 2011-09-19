@@ -13,14 +13,14 @@ class Tester (unittest.TestCase):
 	def setUp (self):
 		ts = []
 		ss = []
-		for x in xrange( 5000 ):
+		for x in range( 5000 ):
 			t = T1()
 			ts.append( t)
 			s = safeRef(t.x, self._closure )
 			ss.append( s)
 		ts.append( t2 )
 		ss.append( safeRef(t2, self._closure) )
-		for x in xrange( 30 ):
+		for x in range( 30 ):
 			t = T2()
 			ts.append( t)
 			s = safeRef(t, self._closure )
@@ -60,7 +60,7 @@ class Tester (unittest.TestCase):
 	def test(self):
 		self.closureCount = 0
 		wholeI = len(self.ts)
-		for i in xrange( len(self.ts)-1, -1, -1):
+		for i in range( len(self.ts)-1, -1, -1):
 			del self.ts[i]
 			if wholeI-i != self.closureCount:
 				"""Unexpected number of items closed, expected %s, got %s closed"""%( wholeI-i,self.closureCount)
