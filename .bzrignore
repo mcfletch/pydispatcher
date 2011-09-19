@@ -7,3 +7,4 @@ pydispatcher-2.0.0.ebuild
 __pycache__
 *.bak
 build
+docs/pydoc/*.html
