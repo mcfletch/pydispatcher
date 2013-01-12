@@ -12,11 +12,8 @@ except ImportError:
     from distutils.core import setup
 
 extra_commands = {}
-extra_arguments = {}
 
-if sys.hexversion >= 0x2030000:
-    # work around distutils complaints under Python 2.2.x
-    extra_arguments = {
+extra_arguments = {
         'classifiers': [
             """License :: OSI Approved :: BSD License""",
             """Programming Language :: Python""",
@@ -64,7 +61,7 @@ if __name__ == "__main__":
         author_email = "pydispatcher-devel@lists.sourceforge.net",
         maintainer_email = "pydispatcher-devel@lists.sourceforge.net",
         url = "http://pydispatcher.sourceforge.net",
-        license = "BSD-style, see license.txt for details",
+        license = "BSD",
 
         package_dir = {
             'pydispatch':'pydispatch',
