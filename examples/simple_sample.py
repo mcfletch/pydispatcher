@@ -1,9 +1,10 @@
 """Simple sample showing basic usage pattern"""
+from __future__ import print_function
 from pydispatch import dispatcher
 
 def doSomethingUseful( table, signal, sender ):
 	"""Sample method to receive signals"""
-	print '  doSomethingUseful', repr(table), signal, sender
+	print('  doSomethingUseful', repr(table), signal, sender)
 def doSomethingElse( signal, **named ):
 	"""Sample method to receive signals
 
@@ -11,7 +12,7 @@ def doSomethingElse( signal, **named ):
 	parameter, which allows a method to receive all
 	remaining parameters from the send call.
 	"""
-	print '  doSomethingElse', named
+	print('  doSomethingElse', named)
 def doDefault( ):
 	"""Sample method to receive All signals
 
@@ -22,7 +23,7 @@ def doDefault( ):
 	automatically determine the appropriate calling
 	signature for the function.
 	"""
-	print '  doDefault (no arguments)'
+	print('  doDefault (no arguments)')
 
 class Node(object):
 	"""Sample object to send signals, note lack of dispatcher-aware code"""
@@ -57,19 +58,19 @@ if __name__ == "__main__":
 		signal = dispatcher.Any, # this is actually the default,
 		sender = ourObjects[0],
 	)
-	print "Sending DO_LOTS from first object"
+	print("Sending DO_LOTS from first object")
 	dispatcher.send(
 		signal = DO_LOTS,
 		sender = ourObjects[0],
 		table = "Table Argument",
 	)
-	print "Sending DO_SOMETHING from first object"
+	print("Sending DO_SOMETHING from first object")
 	dispatcher.send(
 		signal = DO_SOMETHING,
 		sender = ourObjects[0],
 		table = "Table Argument",
 	)
-	print "Sending DO_SOMETHING_ELSE from first object"
+	print("Sending DO_SOMETHING_ELSE from first object")
 	dispatcher.send(
 		signal = DO_SOMETHING_ELSE,
 		sender = ourObjects[0],
