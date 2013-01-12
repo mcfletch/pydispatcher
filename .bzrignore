@@ -8,3 +8,4 @@ __pycache__
 *.bak
 build
 docs/pydoc/*.html
+.coverage
