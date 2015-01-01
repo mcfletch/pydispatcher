@@ -147,6 +147,7 @@ class BoundMethodWeakref(object):
     def __nonzero__( self ):
         """Whether we are still a valid reference"""
         return self() is not None
+    __bool__ = __nonzero__
     def __cmp__( self, other ):
         """Compare with another reference"""
         if not isinstance (other,self.__class__):

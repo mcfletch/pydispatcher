@@ -80,7 +80,7 @@ if __name__ == "__main__":
             },
         },
         cmdclass = extra_commands,
-        use_2to3 = True,
+        # use_2to3 = True,
         # registration metadata
         **extra_arguments
     )

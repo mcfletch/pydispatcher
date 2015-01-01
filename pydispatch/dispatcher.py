@@ -458,7 +458,7 @@ def _removeOldBackRefs(senderkey, signal, receiver, receivers):
         found = 0
         signals = connections.get(signal)
         if signals is not None:
-            for sig,recs in connections.get(signal,{}).iteritems():
+            for sig,recs in connections.get(signal,{}).items():
                 if sig != signal:
                     for rec in recs:
                         if rec is oldReceiver:
