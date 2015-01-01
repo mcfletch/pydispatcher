@@ -62,7 +62,7 @@ class DispatcherTests(unittest.TestCase):
         signal = 'this'
         connect( x, Any, a )
         expected = [(x,a)]
-        result = send('this',a, a=a)
+        result = send(signal,a, a=a)
         assert result == expected,"""Send didn't return expected result:\n\texpected:%s\n\tgot:%s"""% (expected, result)
         disconnect( x, Any, a )
         assert len(list(getAllReceivers(a,Any))) == 0
@@ -113,15 +113,33 @@ class DispatcherTests(unittest.TestCase):
         self._isclean()
     def testRobust( self ):
         """Test the sendRobust function"""
-        def fails( ):
-            raise ValueError( 'this' )
-        a = object()
         signal = 'this'
+        def fails( ):
+            raise ValueError( signal )
+        a = object()
         connect( fails, Any, a )
-        result = robust.sendRobust('this',a, a=a)
+        result = robust.sendRobust(signal,a, a=a)
         err = result[0][1]
         assert isinstance( err, ValueError )
-        assert err.args == ('this',)
+        assert err.args == (signal,)
+    def testParameterRepr(self):
+        assert repr(dispatcher.Any) == '_Any', repr(dispatcher.Any)
+        assert str(dispatcher.Any) == '_Any', str(dispatcher.Any)
+    def testNoNoneSignal(self):
+        self.assertRaises(
+            errors.DispatcherTypeError, 
+            dispatcher.connect,  x, signal=None
+        )
+        self.assertRaises(
+            errors.DispatcherTypeError, 
+            dispatcher.disconnect,  x, signal=None
+        )
+    def testDisconnectUnconnected(self):
+        self.assertRaises(
+            errors.DispatcherKeyError, 
+            dispatcher.disconnect,  x, signal='not-registered'
+        )
+        
 
 def getSuite():
     return unittest.makeSuite(DispatcherTests,'test')
