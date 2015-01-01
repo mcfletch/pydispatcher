@@ -28,10 +28,6 @@ Internal attributes:
 import weakref
 from pydispatch import saferef, robustapply, errors
 
-__author__ = "Patrick K. O'Brien <pobrien@orbtech.com>"
-__cvsid__ = "$Id: dispatcher.py,v 1.1 2010/03/30 15:45:55 mcfletch Exp $"
-__version__ = "$Revision: 1.1 $"[11:-2]
-
 class _Parameter:
 	"""Used to represent default parameter values."""
 	def __repr__(self):

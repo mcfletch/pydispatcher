@@ -1,7 +1,7 @@
 from pydispatch.dispatcher import *
 from pydispatch import dispatcher, robust
 
-import unittest, pprint
+import unittest
 def x(a):
 	return a
 
