@@ -37,12 +37,6 @@ methods using weak-references.
 """,
         'platforms': ['Any'],
     }
-if sys.hexversion >= 0x3000000:
-    try:
-        from distutils.command.build_py import build_py_2to3
-        extra_commands['build_py'] = build_py_2to3
-    except ImportError:
-        pass
 
 version = [
     (line.split('=')[1]).strip().strip('"').strip("'")
