@@ -14,6 +14,9 @@ PyDispatcher is available on PyPI via standard PIP:
 ```
 pip install PyDispatcher
 ```
+[![Latest PyPI Version](https://img.shields.io/pypi/v/pydispatcher.svg)](https://pypi.python.org/pypi/pydispatcher)
+[![Latest PyPI Version](https://img.shields.io/pypi/dm/pydispatcher.svg)](https://pypi.python.org/pypi/pydispatcher)
+
 
 ## Usage
 
@@ -36,3 +39,4 @@ def callback(event=None):
 dispatcher.connect(callback, sender=MyNode, signal=metaKey)
 dispatcher.send(metaKey, MyNode, event=event)
 ```
+
