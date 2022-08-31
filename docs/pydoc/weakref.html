@@ -1,0 +1,888 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module weakref</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>weakref</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/lib/python3.10/weakref.py">/usr/lib/python3.10/weakref.py</a></font></td></tr></table>
+    <p><tt>Weak&nbsp;reference&nbsp;support&nbsp;for&nbsp;Python.<br>
+&nbsp;<br>
+This&nbsp;module&nbsp;is&nbsp;an&nbsp;implementation&nbsp;of&nbsp;<a href="https://www.python.org/dev/peps/pep-0205/">PEP&nbsp;205</a>:<br>
+&nbsp;<br>
+<a href="https://www.python.org/dev/peps/pep-0205/">https://www.python.org/dev/peps/pep-0205/</a></tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#fffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="collections.abc.html">collections.abc</a><br>
+</td><td width="25%" valign=top><a href="itertools.html">itertools</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="builtins.html#object">object</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="weakref.html#CallableProxyType">CallableProxyType</a>
+</font></dt><dt><font face="helvetica, arial"><a href="weakref.html#ProxyType">ProxyType</a>
+</font></dt><dt><font face="helvetica, arial"><a href="weakref.html#ReferenceType">ReferenceType</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="weakref.html#KeyedRef">KeyedRef</a>
+</font></dt><dt><font face="helvetica, arial"><a href="weakref.html#WeakMethod">WeakMethod</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="weakref.html#finalize">finalize</a>
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial"><a href="collections.abc.html#MutableMapping">MutableMapping</a>(<a href="collections.abc.html#Mapping">Mapping</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="weakref.html#WeakKeyDictionary">WeakKeyDictionary</a>
+</font></dt><dt><font face="helvetica, arial"><a href="weakref.html#WeakValueDictionary">WeakValueDictionary</a>
+</font></dt></dl>
+</dd>
+</dl>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CallableProxyType">class <strong>CallableProxyType</strong></a>(<a href="builtins.html#object">object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="CallableProxyType-__abs__"><strong>__abs__</strong></a>(self, /)</dt><dd><tt>abs(self)</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__add__"><strong>__add__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self+value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__and__"><strong>__and__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&amp;value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__bool__"><strong>__bool__</strong></a>(self, /)</dt><dd><tt>True&nbsp;if&nbsp;self&nbsp;else&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__call__"><strong>__call__</strong></a>(self, /, *args, **kwargs)</dt><dd><tt>Call&nbsp;self&nbsp;as&nbsp;a&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__contains__"><strong>__contains__</strong></a>(self, key, /)</dt><dd><tt>Return&nbsp;key&nbsp;in&nbsp;self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__delattr__"><strong>__delattr__</strong></a>(self, name, /)</dt><dd><tt>Implement&nbsp;delattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__delitem__"><strong>__delitem__</strong></a>(self, key, /)</dt><dd><tt>Delete&nbsp;self[key].</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__divmod__"><strong>__divmod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;divmod(self,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__eq__"><strong>__eq__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__float__"><strong>__float__</strong></a>(self, /)</dt><dd><tt>float(self)</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__floordiv__"><strong>__floordiv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self//value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__getitem__"><strong>__getitem__</strong></a>(self, key, /)</dt><dd><tt>Return&nbsp;self[key].</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__iadd__"><strong>__iadd__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self+=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__iand__"><strong>__iand__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&amp;=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__ifloordiv__"><strong>__ifloordiv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self//=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__ilshift__"><strong>__ilshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__imatmul__"><strong>__imatmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self@=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__imod__"><strong>__imod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self%=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__imul__"><strong>__imul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__index__"><strong>__index__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;self&nbsp;converted&nbsp;to&nbsp;an&nbsp;integer,&nbsp;if&nbsp;self&nbsp;is&nbsp;suitable&nbsp;for&nbsp;use&nbsp;as&nbsp;an&nbsp;index&nbsp;into&nbsp;a&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__int__"><strong>__int__</strong></a>(self, /)</dt><dd><tt>int(self)</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__invert__"><strong>__invert__</strong></a>(self, /)</dt><dd><tt>~self</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__ior__"><strong>__ior__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self|=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__ipow__"><strong>__ipow__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self**=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__irshift__"><strong>__irshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__isub__"><strong>__isub__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self-=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__iter__"><strong>__iter__</strong></a>(self, /)</dt><dd><tt>Implement&nbsp;iter(self).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__itruediv__"><strong>__itruediv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self/=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__ixor__"><strong>__ixor__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self^=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__len__"><strong>__len__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;len(self).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__lshift__"><strong>__lshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__matmul__"><strong>__matmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self@value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__mod__"><strong>__mod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self%value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__mul__"><strong>__mul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__neg__"><strong>__neg__</strong></a>(self, /)</dt><dd><tt>-self</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__next__"><strong>__next__</strong></a>(self, /)</dt><dd><tt>Implement&nbsp;next(self).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__or__"><strong>__or__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self|value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__pos__"><strong>__pos__</strong></a>(self, /)</dt><dd><tt>+self</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__pow__"><strong>__pow__</strong></a>(self, value, mod=None, /)</dt><dd><tt>Return&nbsp;pow(self,&nbsp;value,&nbsp;mod).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__radd__"><strong>__radd__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value+self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rand__"><strong>__rand__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value&amp;self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rdivmod__"><strong>__rdivmod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;divmod(value,&nbsp;self).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rfloordiv__"><strong>__rfloordiv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value//self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rlshift__"><strong>__rlshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value&lt;&lt;self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rmatmul__"><strong>__rmatmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value@self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rmod__"><strong>__rmod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value%self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rmul__"><strong>__rmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value*self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__ror__"><strong>__ror__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value|self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rpow__"><strong>__rpow__</strong></a>(self, value, mod=None, /)</dt><dd><tt>Return&nbsp;pow(value,&nbsp;self,&nbsp;mod).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rrshift__"><strong>__rrshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value&gt;&gt;self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rshift__"><strong>__rshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rsub__"><strong>__rsub__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value-self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rtruediv__"><strong>__rtruediv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value/self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__rxor__"><strong>__rxor__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value^self.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__setattr__"><strong>__setattr__</strong></a>(self, name, value, /)</dt><dd><tt>Implement&nbsp;setattr(self,&nbsp;name,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__setitem__"><strong>__setitem__</strong></a>(self, key, value, /)</dt><dd><tt>Set&nbsp;self[key]&nbsp;to&nbsp;value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__str__"><strong>__str__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__sub__"><strong>__sub__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self-value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__truediv__"><strong>__truediv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self/value.</tt></dd></dl>
+
+<dl><dt><a name="CallableProxyType-__xor__"><strong>__xor__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self^value.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="KeyedRef">class <strong>KeyedRef</strong></a>(<a href="weakref.html#ReferenceType">ReferenceType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#KeyedRef">KeyedRef</a>(ob,&nbsp;callback,&nbsp;key)<br>
+&nbsp;<br>
+Specialized&nbsp;reference&nbsp;that&nbsp;includes&nbsp;a&nbsp;key&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;value.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;used&nbsp;in&nbsp;the&nbsp;<a href="#WeakValueDictionary">WeakValueDictionary</a>&nbsp;to&nbsp;avoid&nbsp;having&nbsp;to&nbsp;create<br>
+a&nbsp;function&nbsp;<a href="builtins.html#object">object</a>&nbsp;for&nbsp;each&nbsp;key&nbsp;stored&nbsp;in&nbsp;the&nbsp;mapping.&nbsp;&nbsp;A&nbsp;shared<br>
+callback&nbsp;<a href="builtins.html#object">object</a>&nbsp;can&nbsp;use&nbsp;the&nbsp;'key'&nbsp;attribute&nbsp;of&nbsp;a&nbsp;<a href="#KeyedRef">KeyedRef</a>&nbsp;instead<br>
+of&nbsp;getting&nbsp;a&nbsp;reference&nbsp;to&nbsp;the&nbsp;key&nbsp;from&nbsp;an&nbsp;enclosing&nbsp;scope.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="weakref.html#KeyedRef">KeyedRef</a></dd>
+<dd><a href="weakref.html#ReferenceType">ReferenceType</a></dd>
+<dd><a href="builtins.html#object">object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="KeyedRef-__init__"><strong>__init__</strong></a>(self, ob, callback, key)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="KeyedRef-__new__"><strong>__new__</strong></a>(type, ob, callback, key)</dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>key</strong></dt>
+</dl>
+<hr>
+Methods inherited from <a href="weakref.html#ReferenceType">ReferenceType</a>:<br>
+<dl><dt><a name="KeyedRef-__call__"><strong>__call__</strong></a>(self, /, *args, **kwargs)</dt><dd><tt>Call&nbsp;self&nbsp;as&nbsp;a&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="KeyedRef-__eq__"><strong>__eq__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="KeyedRef-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="KeyedRef-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="KeyedRef-__hash__"><strong>__hash__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;hash(self).</tt></dd></dl>
+
+<dl><dt><a name="KeyedRef-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="KeyedRef-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="KeyedRef-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
+
+<dl><dt><a name="KeyedRef-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="weakref.html#ReferenceType">ReferenceType</a>:<br>
+<dl><dt><a name="KeyedRef-__class_getitem__"><strong>__class_getitem__</strong></a>(...)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">type</a></font></font></dt><dd><tt>See&nbsp;<a href="https://www.python.org/dev/peps/pep-0585/">PEP&nbsp;585</a></tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="weakref.html#ReferenceType">ReferenceType</a>:<br>
+<dl><dt><strong>__callback__</strong></dt>
+</dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ProxyType">class <strong>ProxyType</strong></a>(<a href="builtins.html#object">object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ProxyType-__abs__"><strong>__abs__</strong></a>(self, /)</dt><dd><tt>abs(self)</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__add__"><strong>__add__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self+value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__and__"><strong>__and__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&amp;value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__bool__"><strong>__bool__</strong></a>(self, /)</dt><dd><tt>True&nbsp;if&nbsp;self&nbsp;else&nbsp;False</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__bytes__"><strong>__bytes__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ProxyType-__contains__"><strong>__contains__</strong></a>(self, key, /)</dt><dd><tt>Return&nbsp;key&nbsp;in&nbsp;self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__delattr__"><strong>__delattr__</strong></a>(self, name, /)</dt><dd><tt>Implement&nbsp;delattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__delitem__"><strong>__delitem__</strong></a>(self, key, /)</dt><dd><tt>Delete&nbsp;self[key].</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__divmod__"><strong>__divmod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;divmod(self,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__eq__"><strong>__eq__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__float__"><strong>__float__</strong></a>(self, /)</dt><dd><tt>float(self)</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__floordiv__"><strong>__floordiv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self//value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__getattribute__"><strong>__getattribute__</strong></a>(self, name, /)</dt><dd><tt>Return&nbsp;getattr(self,&nbsp;name).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__getitem__"><strong>__getitem__</strong></a>(self, key, /)</dt><dd><tt>Return&nbsp;self[key].</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__iadd__"><strong>__iadd__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self+=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__iand__"><strong>__iand__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&amp;=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__ifloordiv__"><strong>__ifloordiv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self//=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__ilshift__"><strong>__ilshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__imatmul__"><strong>__imatmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self@=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__imod__"><strong>__imod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self%=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__imul__"><strong>__imul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__index__"><strong>__index__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;self&nbsp;converted&nbsp;to&nbsp;an&nbsp;integer,&nbsp;if&nbsp;self&nbsp;is&nbsp;suitable&nbsp;for&nbsp;use&nbsp;as&nbsp;an&nbsp;index&nbsp;into&nbsp;a&nbsp;list.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__int__"><strong>__int__</strong></a>(self, /)</dt><dd><tt>int(self)</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__invert__"><strong>__invert__</strong></a>(self, /)</dt><dd><tt>~self</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__ior__"><strong>__ior__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self|=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__ipow__"><strong>__ipow__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self**=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__irshift__"><strong>__irshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__isub__"><strong>__isub__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self-=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__iter__"><strong>__iter__</strong></a>(self, /)</dt><dd><tt>Implement&nbsp;iter(self).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__itruediv__"><strong>__itruediv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self/=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__ixor__"><strong>__ixor__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self^=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__len__"><strong>__len__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;len(self).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__lshift__"><strong>__lshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__matmul__"><strong>__matmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self@value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__mod__"><strong>__mod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self%value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__mul__"><strong>__mul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self*value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__neg__"><strong>__neg__</strong></a>(self, /)</dt><dd><tt>-self</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__next__"><strong>__next__</strong></a>(self, /)</dt><dd><tt>Implement&nbsp;next(self).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__or__"><strong>__or__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self|value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__pos__"><strong>__pos__</strong></a>(self, /)</dt><dd><tt>+self</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__pow__"><strong>__pow__</strong></a>(self, value, mod=None, /)</dt><dd><tt>Return&nbsp;pow(self,&nbsp;value,&nbsp;mod).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__radd__"><strong>__radd__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value+self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rand__"><strong>__rand__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value&amp;self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rdivmod__"><strong>__rdivmod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;divmod(value,&nbsp;self).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__reversed__"><strong>__reversed__</strong></a>(...)</dt></dl>
+
+<dl><dt><a name="ProxyType-__rfloordiv__"><strong>__rfloordiv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value//self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rlshift__"><strong>__rlshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value&lt;&lt;self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rmatmul__"><strong>__rmatmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value@self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rmod__"><strong>__rmod__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value%self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rmul__"><strong>__rmul__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value*self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__ror__"><strong>__ror__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value|self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rpow__"><strong>__rpow__</strong></a>(self, value, mod=None, /)</dt><dd><tt>Return&nbsp;pow(value,&nbsp;self,&nbsp;mod).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rrshift__"><strong>__rrshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value&gt;&gt;self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rshift__"><strong>__rshift__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rsub__"><strong>__rsub__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value-self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rtruediv__"><strong>__rtruediv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value/self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__rxor__"><strong>__rxor__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;value^self.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__setattr__"><strong>__setattr__</strong></a>(self, name, value, /)</dt><dd><tt>Implement&nbsp;setattr(self,&nbsp;name,&nbsp;value).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__setitem__"><strong>__setitem__</strong></a>(self, key, value, /)</dt><dd><tt>Set&nbsp;self[key]&nbsp;to&nbsp;value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__str__"><strong>__str__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;str(self).</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__sub__"><strong>__sub__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self-value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__truediv__"><strong>__truediv__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self/value.</tt></dd></dl>
+
+<dl><dt><a name="ProxyType-__xor__"><strong>__xor__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self^value.</tt></dd></dl>
+
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ReferenceType">class <strong>ReferenceType</strong></a>(<a href="builtins.html#object">object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ReferenceType-__call__"><strong>__call__</strong></a>(self, /, *args, **kwargs)</dt><dd><tt>Call&nbsp;self&nbsp;as&nbsp;a&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__eq__"><strong>__eq__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__hash__"><strong>__hash__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;hash(self).</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__init__"><strong>__init__</strong></a>(self, /, *args, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Class methods defined here:<br>
+<dl><dt><a name="ReferenceType-__class_getitem__"><strong>__class_getitem__</strong></a>(...)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">type</a></font></font></dt><dd><tt>See&nbsp;<a href="https://www.python.org/dev/peps/pep-0585/">PEP&nbsp;585</a></tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="ReferenceType-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__callback__</strong></dt>
+</dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="WeakKeyDictionary">class <strong>WeakKeyDictionary</strong></a>(<a href="collections.abc.html#MutableMapping">MutableMapping</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#WeakKeyDictionary">WeakKeyDictionary</a>(dict=None)<br>
+&nbsp;<br>
+Mapping&nbsp;class&nbsp;that&nbsp;references&nbsp;keys&nbsp;weakly.<br>
+&nbsp;<br>
+Entries&nbsp;in&nbsp;the&nbsp;dictionary&nbsp;will&nbsp;be&nbsp;discarded&nbsp;when&nbsp;there&nbsp;is&nbsp;no<br>
+longer&nbsp;a&nbsp;strong&nbsp;reference&nbsp;to&nbsp;the&nbsp;key.&nbsp;This&nbsp;can&nbsp;be&nbsp;used&nbsp;to<br>
+associate&nbsp;additional&nbsp;data&nbsp;with&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;owned&nbsp;by&nbsp;other&nbsp;parts&nbsp;of<br>
+an&nbsp;application&nbsp;without&nbsp;adding&nbsp;attributes&nbsp;to&nbsp;those&nbsp;objects.&nbsp;This<br>
+can&nbsp;be&nbsp;especially&nbsp;useful&nbsp;with&nbsp;objects&nbsp;that&nbsp;override&nbsp;attribute<br>
+accesses.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="weakref.html#WeakKeyDictionary">WeakKeyDictionary</a></dd>
+<dd><a href="collections.abc.html#MutableMapping">MutableMapping</a></dd>
+<dd><a href="collections.abc.html#Mapping">Mapping</a></dd>
+<dd><a href="collections.abc.html#Collection">Collection</a></dd>
+<dd><a href="collections.abc.html#Sized">Sized</a></dd>
+<dd><a href="collections.abc.html#Iterable">Iterable</a></dd>
+<dd><a href="collections.abc.html#Container">Container</a></dd>
+<dd><a href="builtins.html#object">object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="WeakKeyDictionary-__contains__"><strong>__contains__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__copy__"><strong>__copy__</strong></a> = <a href="#WeakKeyDictionary-copy">copy</a>(self)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__deepcopy__"><strong>__deepcopy__</strong></a>(self, memo)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__delitem__"><strong>__delitem__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__getitem__"><strong>__getitem__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__init__"><strong>__init__</strong></a>(self, dict=None)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__ior__"><strong>__ior__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__iter__"><strong>__iter__</strong></a> = <a href="#WeakKeyDictionary-keys">keys</a>(self)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__len__"><strong>__len__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;self|value.</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__ror__"><strong>__ror__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;value|self.</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-__setitem__"><strong>__setitem__</strong></a>(self, key, value)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="WeakKeyDictionary-get"><strong>get</strong></a>(self, key, default=None)</dt><dd><tt>D.<a href="#WeakKeyDictionary-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-items"><strong>items</strong></a>(self)</dt><dd><tt>D.<a href="#WeakKeyDictionary-items">items</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;items</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-keyrefs"><strong>keyrefs</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;keys.<br>
+&nbsp;<br>
+The&nbsp;references&nbsp;are&nbsp;not&nbsp;guaranteed&nbsp;to&nbsp;be&nbsp;'live'&nbsp;at&nbsp;the&nbsp;time<br>
+they&nbsp;are&nbsp;used,&nbsp;so&nbsp;the&nbsp;result&nbsp;of&nbsp;calling&nbsp;the&nbsp;references&nbsp;needs<br>
+to&nbsp;be&nbsp;checked&nbsp;before&nbsp;being&nbsp;used.&nbsp;&nbsp;This&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;avoid<br>
+creating&nbsp;references&nbsp;that&nbsp;will&nbsp;cause&nbsp;the&nbsp;garbage&nbsp;collector&nbsp;to<br>
+keep&nbsp;the&nbsp;keys&nbsp;around&nbsp;longer&nbsp;than&nbsp;needed.</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-keys"><strong>keys</strong></a>(self)</dt><dd><tt>D.<a href="#WeakKeyDictionary-keys">keys</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-pop"><strong>pop</strong></a>(self, key, *args)</dt><dd><tt>D.<a href="#WeakKeyDictionary-pop">pop</a>(k[,d])&nbsp;-&gt;&nbsp;v,&nbsp;remove&nbsp;specified&nbsp;key&nbsp;and&nbsp;return&nbsp;the&nbsp;corresponding&nbsp;value.<br>
+If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nbsp;given,&nbsp;otherwise&nbsp;KeyError&nbsp;is&nbsp;raised.</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-popitem"><strong>popitem</strong></a>(self)</dt><dd><tt>D.<a href="#WeakKeyDictionary-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair<br>
+as&nbsp;a&nbsp;2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty.</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-setdefault"><strong>setdefault</strong></a>(self, key, default=None)</dt><dd><tt>D.<a href="#WeakKeyDictionary-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#WeakKeyDictionary-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-update"><strong>update</strong></a>(self, dict=None, /, **kwargs)</dt><dd><tt>D.<a href="#WeakKeyDictionary-update">update</a>([E,&nbsp;]**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;mapping/iterable&nbsp;E&nbsp;and&nbsp;F.<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;has&nbsp;a&nbsp;.<a href="#WeakKeyDictionary-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;lacks&nbsp;.<a href="#WeakKeyDictionary-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(k,&nbsp;v)&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v<br>
+In&nbsp;either&nbsp;case,&nbsp;this&nbsp;is&nbsp;followed&nbsp;by:&nbsp;for&nbsp;k,&nbsp;v&nbsp;in&nbsp;F.<a href="#WeakKeyDictionary-items">items</a>():&nbsp;D[k]&nbsp;=&nbsp;v</tt></dd></dl>
+
+<dl><dt><a name="WeakKeyDictionary-values"><strong>values</strong></a>(self)</dt><dd><tt>D.<a href="#WeakKeyDictionary-values">values</a>()&nbsp;-&gt;&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__abstractmethods__</strong> = frozenset()</dl>
+
+<hr>
+Methods inherited from <a href="collections.abc.html#MutableMapping">MutableMapping</a>:<br>
+<dl><dt><a name="WeakKeyDictionary-clear"><strong>clear</strong></a>(self)</dt><dd><tt>D.<a href="#WeakKeyDictionary-clear">clear</a>()&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Remove&nbsp;all&nbsp;items&nbsp;from&nbsp;D.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="collections.abc.html#Mapping">Mapping</a>:<br>
+<dl><dt><a name="WeakKeyDictionary-__eq__"><strong>__eq__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="collections.abc.html#Mapping">Mapping</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+<dl><dt><strong>__reversed__</strong> = None</dl>
+
+<hr>
+Class methods inherited from <a href="collections.abc.html#Collection">Collection</a>:<br>
+<dl><dt><a name="WeakKeyDictionary-__subclasshook__"><strong>__subclasshook__</strong></a>(C)<font color="#909090"><font face="helvetica, arial"> from <a href="abc.html#ABCMeta">ABCMeta</a></font></font></dt><dd><tt>Abstract&nbsp;classes&nbsp;can&nbsp;override&nbsp;this&nbsp;to&nbsp;customize&nbsp;issubclass().<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;invoked&nbsp;early&nbsp;on&nbsp;by&nbsp;abc.ABCMeta.__subclasscheck__().<br>
+It&nbsp;should&nbsp;return&nbsp;True,&nbsp;False&nbsp;or&nbsp;NotImplemented.&nbsp;&nbsp;If&nbsp;it&nbsp;returns<br>
+NotImplemented,&nbsp;the&nbsp;normal&nbsp;algorithm&nbsp;is&nbsp;used.&nbsp;&nbsp;Otherwise,&nbsp;it<br>
+overrides&nbsp;the&nbsp;normal&nbsp;algorithm&nbsp;(and&nbsp;the&nbsp;outcome&nbsp;is&nbsp;cached).</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="collections.abc.html#Iterable">Iterable</a>:<br>
+<dl><dt><a name="WeakKeyDictionary-__class_getitem__"><strong>__class_getitem__</strong></a> = GenericAlias(...)<font color="#909090"><font face="helvetica, arial"> from <a href="abc.html#ABCMeta">ABCMeta</a></font></font></dt><dd><tt>Represent&nbsp;a&nbsp;<a href="https://www.python.org/dev/peps/pep-0585/">PEP&nbsp;585</a>&nbsp;generic&nbsp;type<br>
+&nbsp;<br>
+E.g.&nbsp;for&nbsp;t&nbsp;=&nbsp;list[int],&nbsp;t.__origin__&nbsp;is&nbsp;list&nbsp;and&nbsp;t.__args__&nbsp;is&nbsp;(int,).</tt></dd></dl>
+
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="WeakMethod">class <strong>WeakMethod</strong></a>(<a href="weakref.html#ReferenceType">ReferenceType</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#WeakMethod">WeakMethod</a>(meth,&nbsp;callback=None)<br>
+&nbsp;<br>
+A&nbsp;custom&nbsp;`weakref.<a href="#ref">ref</a>`&nbsp;subclass&nbsp;which&nbsp;simulates&nbsp;a&nbsp;weak&nbsp;reference&nbsp;to<br>
+a&nbsp;bound&nbsp;method,&nbsp;working&nbsp;around&nbsp;the&nbsp;lifetime&nbsp;problem&nbsp;of&nbsp;bound&nbsp;methods.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="weakref.html#WeakMethod">WeakMethod</a></dd>
+<dd><a href="weakref.html#ReferenceType">ReferenceType</a></dd>
+<dd><a href="builtins.html#object">object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="WeakMethod-__call__"><strong>__call__</strong></a>(self)</dt><dd><tt>Call&nbsp;self&nbsp;as&nbsp;a&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="WeakMethod-__eq__"><strong>__eq__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="WeakMethod-__hash__"><strong>__hash__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;hash(self).</tt></dd></dl>
+
+<dl><dt><a name="WeakMethod-__ne__"><strong>__ne__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="WeakMethod-__new__"><strong>__new__</strong></a>(cls, meth, callback=None)</dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="weakref.html#ReferenceType">ReferenceType</a>:<br>
+<dl><dt><a name="WeakMethod-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="WeakMethod-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="WeakMethod-__init__"><strong>__init__</strong></a>(self, /, *args, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="WeakMethod-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="WeakMethod-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="WeakMethod-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="weakref.html#ReferenceType">ReferenceType</a>:<br>
+<dl><dt><a name="WeakMethod-__class_getitem__"><strong>__class_getitem__</strong></a>(...)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">type</a></font></font></dt><dd><tt>See&nbsp;<a href="https://www.python.org/dev/peps/pep-0585/">PEP&nbsp;585</a></tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="weakref.html#ReferenceType">ReferenceType</a>:<br>
+<dl><dt><strong>__callback__</strong></dt>
+</dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="WeakValueDictionary">class <strong>WeakValueDictionary</strong></a>(<a href="collections.abc.html#MutableMapping">MutableMapping</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#WeakValueDictionary">WeakValueDictionary</a>(other=(),&nbsp;/,&nbsp;**kw)<br>
+&nbsp;<br>
+Mapping&nbsp;class&nbsp;that&nbsp;references&nbsp;values&nbsp;weakly.<br>
+&nbsp;<br>
+Entries&nbsp;in&nbsp;the&nbsp;dictionary&nbsp;will&nbsp;be&nbsp;discarded&nbsp;when&nbsp;no&nbsp;strong<br>
+reference&nbsp;to&nbsp;the&nbsp;value&nbsp;exists&nbsp;anymore<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="weakref.html#WeakValueDictionary">WeakValueDictionary</a></dd>
+<dd><a href="collections.abc.html#MutableMapping">MutableMapping</a></dd>
+<dd><a href="collections.abc.html#Mapping">Mapping</a></dd>
+<dd><a href="collections.abc.html#Collection">Collection</a></dd>
+<dd><a href="collections.abc.html#Sized">Sized</a></dd>
+<dd><a href="collections.abc.html#Iterable">Iterable</a></dd>
+<dd><a href="collections.abc.html#Container">Container</a></dd>
+<dd><a href="builtins.html#object">object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="WeakValueDictionary-__contains__"><strong>__contains__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-__copy__"><strong>__copy__</strong></a> = <a href="#WeakValueDictionary-copy">copy</a>(self)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-__deepcopy__"><strong>__deepcopy__</strong></a>(self, memo)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-__delitem__"><strong>__delitem__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-__getitem__"><strong>__getitem__</strong></a>(self, key)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-__init__"><strong>__init__</strong></a>(self, other=(), /, **kw)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-__ior__"><strong>__ior__</strong></a>(self, other)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-__iter__"><strong>__iter__</strong></a> = <a href="#WeakValueDictionary-keys">keys</a>(self)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-__len__"><strong>__len__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-__or__"><strong>__or__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;self|value.</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-__ror__"><strong>__ror__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;value|self.</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-__setitem__"><strong>__setitem__</strong></a>(self, key, value)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-copy"><strong>copy</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="WeakValueDictionary-get"><strong>get</strong></a>(self, key, default=None)</dt><dd><tt>D.<a href="#WeakValueDictionary-get">get</a>(k[,d])&nbsp;-&gt;&nbsp;D[k]&nbsp;if&nbsp;k&nbsp;in&nbsp;D,&nbsp;else&nbsp;d.&nbsp;&nbsp;d&nbsp;defaults&nbsp;to&nbsp;None.</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-items"><strong>items</strong></a>(self)</dt><dd><tt>D.<a href="#WeakValueDictionary-items">items</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;items</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-itervaluerefs"><strong>itervaluerefs</strong></a>(self)</dt><dd><tt>Return&nbsp;an&nbsp;iterator&nbsp;that&nbsp;yields&nbsp;the&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;values.<br>
+&nbsp;<br>
+The&nbsp;references&nbsp;are&nbsp;not&nbsp;guaranteed&nbsp;to&nbsp;be&nbsp;'live'&nbsp;at&nbsp;the&nbsp;time<br>
+they&nbsp;are&nbsp;used,&nbsp;so&nbsp;the&nbsp;result&nbsp;of&nbsp;calling&nbsp;the&nbsp;references&nbsp;needs<br>
+to&nbsp;be&nbsp;checked&nbsp;before&nbsp;being&nbsp;used.&nbsp;&nbsp;This&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;avoid<br>
+creating&nbsp;references&nbsp;that&nbsp;will&nbsp;cause&nbsp;the&nbsp;garbage&nbsp;collector&nbsp;to<br>
+keep&nbsp;the&nbsp;values&nbsp;around&nbsp;longer&nbsp;than&nbsp;needed.</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-keys"><strong>keys</strong></a>(self)</dt><dd><tt>D.<a href="#WeakValueDictionary-keys">keys</a>()&nbsp;-&gt;&nbsp;a&nbsp;set-like&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;keys</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-pop"><strong>pop</strong></a>(self, key, *args)</dt><dd><tt>D.<a href="#WeakValueDictionary-pop">pop</a>(k[,d])&nbsp;-&gt;&nbsp;v,&nbsp;remove&nbsp;specified&nbsp;key&nbsp;and&nbsp;return&nbsp;the&nbsp;corresponding&nbsp;value.<br>
+If&nbsp;key&nbsp;is&nbsp;not&nbsp;found,&nbsp;d&nbsp;is&nbsp;returned&nbsp;if&nbsp;given,&nbsp;otherwise&nbsp;KeyError&nbsp;is&nbsp;raised.</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-popitem"><strong>popitem</strong></a>(self)</dt><dd><tt>D.<a href="#WeakValueDictionary-popitem">popitem</a>()&nbsp;-&gt;&nbsp;(k,&nbsp;v),&nbsp;remove&nbsp;and&nbsp;return&nbsp;some&nbsp;(key,&nbsp;value)&nbsp;pair<br>
+as&nbsp;a&nbsp;2-tuple;&nbsp;but&nbsp;raise&nbsp;KeyError&nbsp;if&nbsp;D&nbsp;is&nbsp;empty.</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-setdefault"><strong>setdefault</strong></a>(self, key, default=None)</dt><dd><tt>D.<a href="#WeakValueDictionary-setdefault">setdefault</a>(k[,d])&nbsp;-&gt;&nbsp;D.<a href="#WeakValueDictionary-get">get</a>(k,d),&nbsp;also&nbsp;set&nbsp;D[k]=d&nbsp;if&nbsp;k&nbsp;not&nbsp;in&nbsp;D</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-update"><strong>update</strong></a>(self, other=None, /, **kwargs)</dt><dd><tt>D.<a href="#WeakValueDictionary-update">update</a>([E,&nbsp;]**F)&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Update&nbsp;D&nbsp;from&nbsp;mapping/iterable&nbsp;E&nbsp;and&nbsp;F.<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;has&nbsp;a&nbsp;.<a href="#WeakValueDictionary-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;k&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;E[k]<br>
+If&nbsp;E&nbsp;present&nbsp;and&nbsp;lacks&nbsp;.<a href="#WeakValueDictionary-keys">keys</a>()&nbsp;method,&nbsp;does:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for&nbsp;(k,&nbsp;v)&nbsp;in&nbsp;E:&nbsp;D[k]&nbsp;=&nbsp;v<br>
+In&nbsp;either&nbsp;case,&nbsp;this&nbsp;is&nbsp;followed&nbsp;by:&nbsp;for&nbsp;k,&nbsp;v&nbsp;in&nbsp;F.<a href="#WeakValueDictionary-items">items</a>():&nbsp;D[k]&nbsp;=&nbsp;v</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-valuerefs"><strong>valuerefs</strong></a>(self)</dt><dd><tt>Return&nbsp;a&nbsp;list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;values.<br>
+&nbsp;<br>
+The&nbsp;references&nbsp;are&nbsp;not&nbsp;guaranteed&nbsp;to&nbsp;be&nbsp;'live'&nbsp;at&nbsp;the&nbsp;time<br>
+they&nbsp;are&nbsp;used,&nbsp;so&nbsp;the&nbsp;result&nbsp;of&nbsp;calling&nbsp;the&nbsp;references&nbsp;needs<br>
+to&nbsp;be&nbsp;checked&nbsp;before&nbsp;being&nbsp;used.&nbsp;&nbsp;This&nbsp;can&nbsp;be&nbsp;used&nbsp;to&nbsp;avoid<br>
+creating&nbsp;references&nbsp;that&nbsp;will&nbsp;cause&nbsp;the&nbsp;garbage&nbsp;collector&nbsp;to<br>
+keep&nbsp;the&nbsp;values&nbsp;around&nbsp;longer&nbsp;than&nbsp;needed.</tt></dd></dl>
+
+<dl><dt><a name="WeakValueDictionary-values"><strong>values</strong></a>(self)</dt><dd><tt>D.<a href="#WeakValueDictionary-values">values</a>()&nbsp;-&gt;&nbsp;an&nbsp;<a href="builtins.html#object">object</a>&nbsp;providing&nbsp;a&nbsp;view&nbsp;on&nbsp;D's&nbsp;values</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__abstractmethods__</strong> = frozenset()</dl>
+
+<hr>
+Methods inherited from <a href="collections.abc.html#MutableMapping">MutableMapping</a>:<br>
+<dl><dt><a name="WeakValueDictionary-clear"><strong>clear</strong></a>(self)</dt><dd><tt>D.<a href="#WeakValueDictionary-clear">clear</a>()&nbsp;-&gt;&nbsp;None.&nbsp;&nbsp;Remove&nbsp;all&nbsp;items&nbsp;from&nbsp;D.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="collections.abc.html#Mapping">Mapping</a>:<br>
+<dl><dt><a name="WeakValueDictionary-__eq__"><strong>__eq__</strong></a>(self, other)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<hr>
+Data and other attributes inherited from <a href="collections.abc.html#Mapping">Mapping</a>:<br>
+<dl><dt><strong>__hash__</strong> = None</dl>
+
+<dl><dt><strong>__reversed__</strong> = None</dl>
+
+<hr>
+Class methods inherited from <a href="collections.abc.html#Collection">Collection</a>:<br>
+<dl><dt><a name="WeakValueDictionary-__subclasshook__"><strong>__subclasshook__</strong></a>(C)<font color="#909090"><font face="helvetica, arial"> from <a href="abc.html#ABCMeta">ABCMeta</a></font></font></dt><dd><tt>Abstract&nbsp;classes&nbsp;can&nbsp;override&nbsp;this&nbsp;to&nbsp;customize&nbsp;issubclass().<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;invoked&nbsp;early&nbsp;on&nbsp;by&nbsp;abc.ABCMeta.__subclasscheck__().<br>
+It&nbsp;should&nbsp;return&nbsp;True,&nbsp;False&nbsp;or&nbsp;NotImplemented.&nbsp;&nbsp;If&nbsp;it&nbsp;returns<br>
+NotImplemented,&nbsp;the&nbsp;normal&nbsp;algorithm&nbsp;is&nbsp;used.&nbsp;&nbsp;Otherwise,&nbsp;it<br>
+overrides&nbsp;the&nbsp;normal&nbsp;algorithm&nbsp;(and&nbsp;the&nbsp;outcome&nbsp;is&nbsp;cached).</tt></dd></dl>
+
+<hr>
+Class methods inherited from <a href="collections.abc.html#Iterable">Iterable</a>:<br>
+<dl><dt><a name="WeakValueDictionary-__class_getitem__"><strong>__class_getitem__</strong></a> = GenericAlias(...)<font color="#909090"><font face="helvetica, arial"> from <a href="abc.html#ABCMeta">ABCMeta</a></font></font></dt><dd><tt>Represent&nbsp;a&nbsp;<a href="https://www.python.org/dev/peps/pep-0585/">PEP&nbsp;585</a>&nbsp;generic&nbsp;type<br>
+&nbsp;<br>
+E.g.&nbsp;for&nbsp;t&nbsp;=&nbsp;list[int],&nbsp;t.__origin__&nbsp;is&nbsp;list&nbsp;and&nbsp;t.__args__&nbsp;is&nbsp;(int,).</tt></dd></dl>
+
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="finalize">class <strong>finalize</strong></a>(<a href="builtins.html#object">object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#finalize">finalize</a>(obj,&nbsp;func,&nbsp;/,&nbsp;*args,&nbsp;**kwargs)<br>
+&nbsp;<br>
+Class&nbsp;for&nbsp;finalization&nbsp;of&nbsp;weakrefable&nbsp;objects<br>
+&nbsp;<br>
+<a href="#finalize">finalize</a>(obj,&nbsp;func,&nbsp;*args,&nbsp;**kwargs)&nbsp;returns&nbsp;a&nbsp;callable&nbsp;finalizer<br>
+<a href="builtins.html#object">object</a>&nbsp;which&nbsp;will&nbsp;be&nbsp;called&nbsp;when&nbsp;obj&nbsp;is&nbsp;garbage&nbsp;collected.&nbsp;The<br>
+first&nbsp;time&nbsp;the&nbsp;finalizer&nbsp;is&nbsp;called&nbsp;it&nbsp;evaluates&nbsp;func(*arg,&nbsp;**kwargs)<br>
+and&nbsp;returns&nbsp;the&nbsp;result.&nbsp;After&nbsp;this&nbsp;the&nbsp;finalizer&nbsp;is&nbsp;dead,&nbsp;and<br>
+calling&nbsp;it&nbsp;just&nbsp;returns&nbsp;None.<br>
+&nbsp;<br>
+When&nbsp;the&nbsp;program&nbsp;exits&nbsp;any&nbsp;remaining&nbsp;finalizers&nbsp;for&nbsp;which&nbsp;the<br>
+atexit&nbsp;attribute&nbsp;is&nbsp;true&nbsp;will&nbsp;be&nbsp;run&nbsp;in&nbsp;reverse&nbsp;order&nbsp;of&nbsp;creation.<br>
+By&nbsp;default&nbsp;atexit&nbsp;is&nbsp;true.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="finalize-__call__"><strong>__call__</strong></a>(self, _=None)</dt><dd><tt>If&nbsp;alive&nbsp;then&nbsp;mark&nbsp;as&nbsp;dead&nbsp;and&nbsp;return&nbsp;func(*args,&nbsp;**kwargs);<br>
+otherwise&nbsp;return&nbsp;None</tt></dd></dl>
+
+<dl><dt><a name="finalize-__init__"><strong>__init__</strong></a>(self, obj, func, /, *args, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="finalize-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="finalize-detach"><strong>detach</strong></a>(self)</dt><dd><tt>If&nbsp;alive&nbsp;then&nbsp;mark&nbsp;as&nbsp;dead&nbsp;and&nbsp;return&nbsp;(obj,&nbsp;func,&nbsp;args,&nbsp;kwargs);<br>
+otherwise&nbsp;return&nbsp;None</tt></dd></dl>
+
+<dl><dt><a name="finalize-peek"><strong>peek</strong></a>(self)</dt><dd><tt>If&nbsp;alive&nbsp;then&nbsp;return&nbsp;(obj,&nbsp;func,&nbsp;args,&nbsp;kwargs);<br>
+otherwise&nbsp;return&nbsp;None</tt></dd></dl>
+
+<hr>
+Readonly properties defined here:<br>
+<dl><dt><strong>alive</strong></dt>
+<dd><tt>Whether&nbsp;finalizer&nbsp;is&nbsp;alive</tt></dd>
+</dl>
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>atexit</strong></dt>
+<dd><tt>Whether&nbsp;finalizer&nbsp;should&nbsp;be&nbsp;called&nbsp;at&nbsp;exit</tt></dd>
+</dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><strong>ref</strong> = <a name="ref">class ReferenceType</a>(<a href="builtins.html#object">object</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="ReferenceType-__call__"><strong>__call__</strong></a>(self, /, *args, **kwargs)</dt><dd><tt>Call&nbsp;self&nbsp;as&nbsp;a&nbsp;function.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__eq__"><strong>__eq__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self==value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__ge__"><strong>__ge__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;=value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__gt__"><strong>__gt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&gt;value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__hash__"><strong>__hash__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;hash(self).</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__init__"><strong>__init__</strong></a>(self, /, *args, **kwargs)</dt><dd><tt>Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__le__"><strong>__le__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;=value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__lt__"><strong>__lt__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self&lt;value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__ne__"><strong>__ne__</strong></a>(self, value, /)</dt><dd><tt>Return&nbsp;self!=value.</tt></dd></dl>
+
+<dl><dt><a name="ReferenceType-__repr__"><strong>__repr__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Class methods defined here:<br>
+<dl><dt><a name="ReferenceType-__class_getitem__"><strong>__class_getitem__</strong></a>(...)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">type</a></font></font></dt><dd><tt>See&nbsp;<a href="https://www.python.org/dev/peps/pep-0585/">PEP&nbsp;585</a></tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="ReferenceType-__new__"><strong>__new__</strong></a>(*args, **kwargs)<font color="#909090"><font face="helvetica, arial"> from <a href="builtins.html#type">type</a></font></font></dt><dd><tt>Create&nbsp;and&nbsp;return&nbsp;a&nbsp;new&nbsp;<a href="builtins.html#object">object</a>.&nbsp;&nbsp;See&nbsp;help(type)&nbsp;for&nbsp;accurate&nbsp;signature.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__callback__</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-_remove_dead_weakref"><strong>_remove_dead_weakref</strong></a>(dct, key, /)</dt><dd><tt>Atomically&nbsp;remove&nbsp;key&nbsp;from&nbsp;dict&nbsp;if&nbsp;it&nbsp;points&nbsp;to&nbsp;a&nbsp;dead&nbsp;weakref.</tt></dd></dl>
+<dl><dt><a name="-getweakrefcount"><strong>getweakrefcount</strong></a>(object, /)</dt><dd><tt>Return&nbsp;the&nbsp;number&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;'<a href="builtins.html#object">object</a>'.</tt></dd></dl>
+<dl><dt><a name="-getweakrefs"><strong>getweakrefs</strong></a>(...)</dt><dd><tt><a href="#-getweakrefs">getweakrefs</a>(<a href="builtins.html#object">object</a>)&nbsp;--&nbsp;return&nbsp;a&nbsp;list&nbsp;of&nbsp;all&nbsp;weak&nbsp;reference&nbsp;objects<br>
+that&nbsp;point&nbsp;to&nbsp;'<a href="builtins.html#object">object</a>'.</tt></dd></dl>
+<dl><dt><a name="-proxy"><strong>proxy</strong></a>(...)</dt><dd><tt><a href="#-proxy">proxy</a>(<a href="builtins.html#object">object</a>[,&nbsp;callback])&nbsp;--&nbsp;create&nbsp;a&nbsp;proxy&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;weakly<br>
+references&nbsp;'<a href="builtins.html#object">object</a>'.&nbsp;&nbsp;'callback',&nbsp;if&nbsp;given,&nbsp;is&nbsp;called&nbsp;with&nbsp;a<br>
+reference&nbsp;to&nbsp;the&nbsp;proxy&nbsp;when&nbsp;'<a href="builtins.html#object">object</a>'&nbsp;is&nbsp;about&nbsp;to&nbsp;be&nbsp;finalized.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>ProxyTypes</strong> = (&lt;class 'weakref.ProxyType'&gt;, &lt;class 'weakref.CallableProxyType'&gt;)<br>
+<strong>__all__</strong> = ['ref', 'proxy', 'getweakrefcount', 'getweakrefs', 'WeakKeyDictionary', 'ReferenceType', 'ProxyType', 'CallableProxyType', 'ProxyTypes', 'WeakValueDictionary', 'WeakSet', 'WeakMethod', 'finalize']<br>
+<strong>__cached__</strong> = '/usr/lib/python3.10/__pycache__/weakref.cpython-310.pyc'<br>
+<strong>__file__</strong> = '/usr/lib/python3.10/weakref.py'<br>
+<strong>__loader__</strong> = &lt;_frozen_importlib_external.SourceFileLoader object&gt;<br>
+<strong>__name__</strong> = 'weakref'<br>
+<strong>__spec__</strong> = ModuleSpec(name='weakref', loader=&lt;_frozen_impor...a55a80&gt;, origin='/usr/lib/python3.10/weakref.py')</td></tr></table>
+</body></html>
