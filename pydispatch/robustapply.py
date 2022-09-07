@@ -5,6 +5,7 @@ what arguments a given callable object can take,
 and subset the given arguments to match only
 those which are acceptable.
 """
+import functools
 import sys
 if sys.hexversion >= 0x3000000:
     im_func = '__func__'
@@ -25,6 +26,10 @@ def function( receiver ):
     If fromMethod is true, then the callable already
     has its first argument bound
     """
+    if isinstance(receiver, functools.partial):
+        # Get the code object and start index from bound function.
+        _, code_obj, start_idx = function(receiver.func)
+        return receiver, code_obj, start_idx
     if hasattr(receiver, '__call__'):
         # Reassign receiver to the actual method that will be called.
         if hasattr( receiver.__call__, im_func) or hasattr( receiver.__call__, im_code):
