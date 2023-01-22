@@ -5,6 +5,26 @@ from reprlib import Repr
 
 
 class DefaultFormatter(pydoc.HTMLDoc):
+    def heading(self, *args):
+        try:
+            return super().heading(*args)
+        except TypeError:
+            # Python 3.11 doesn't use the color args
+            args = list(args)
+            del args[1:3]
+            return super().heading(*args)
+
+    def section(self, *args):
+        try:
+            # Python 3.11 uses a class instead of colors
+            py311_args = list(args)
+            del py311_args[1:3]
+            cls = '-'.join(['section', *(args[0].lower().split())])
+            py311_args.insert(1, cls)
+            return super().section(*py311_args)
+        except TypeError:
+            return super().section(*args)
+
     def docmodule(self, object, name=None, mod=None, packageContext=None, *ignored):
         """Produce HTML documentation for a module object."""
         name = object.__name__  # ignore the passed-in name
