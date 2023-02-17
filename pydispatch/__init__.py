@@ -2,4 +2,4 @@
 """
 __version__ = "2.0.7"
 __author__ = "Patrick K. O'Brien"
-__license__ = "BSD-style, see license.txt for details"
+__license__ = "BSD"

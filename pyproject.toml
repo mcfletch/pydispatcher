@@ -2,12 +2,16 @@
 name="PyDispatcher"
 description="Multi-producer multi-consumer in-memory signal dispatch system"
 dynamic=["version"]
+keywords=["dispatcher", "dispatch", "pydispatch", "event", "signal", "sender", "receiver", "propagate", "multi-consumer", "multi-producer", "saferef", "robustapply", "apply"]
 authors = [
     { name = "Patrick K. O'Brien" }
 ]
 maintainers = [
     { name = "Mike C. Fletcher", email = "mcfletch@vrplumber.com" }
 ]
+classifiers = ["License :: OSI Approved :: BSD License", "Programming Language :: Python", "Programming Language :: Python :: 2", "Programming Language :: Python :: 3", "Topic :: Software Development :: Libraries :: Python Modules", "Intended Audience :: Developers"]
+readme = {file="README.md", content-type="text/markdown"}
+license ={text= "BSD"}
 
 [project.optional-dependencies]
 dev = [
