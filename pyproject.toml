@@ -1,0 +1,21 @@
+[project]
+name="PyDispatcher"
+description="Multi-producer multi-consumer in-memory signal dispatch system"
+dynamic=["version"]
+authors = [
+    { name = "Patrick K. O'Brien" }
+]
+maintainers = [
+    { name = "Mike C. Fletcher", email = "mcfletch@vrplumber.com" }
+]
+
+[project.optional-dependencies]
+dev = [
+    "tox",
+]
+
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+
+[tool.setuptools.dynamic]
+version = {attr = "pydispatch.__version__"}
