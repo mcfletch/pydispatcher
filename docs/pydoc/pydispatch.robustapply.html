@@ -36,7 +36,11 @@ returns&nbsp;(function_or_method,&nbsp;codeObject,&nbsp;fromMethod)<br>
 &nbsp;<br>
 If&nbsp;fromMethod&nbsp;is&nbsp;true,&nbsp;then&nbsp;the&nbsp;callable&nbsp;already<br>
 has&nbsp;its&nbsp;first&nbsp;argument&nbsp;bound</tt></dd></dl>
-<dl><dt><a name="-robustApply"><strong>robustApply</strong></a>(receiver, *arguments, **named)</dt><dd><tt>Call&nbsp;receiver&nbsp;with&nbsp;arguments&nbsp;and&nbsp;an&nbsp;appropriate&nbsp;subset&nbsp;of&nbsp;named</tt></dd></dl>
+<dl><dt><a name="-robustApply"><strong>robustApply</strong></a>(receiver, *arguments, **named)</dt><dd><tt>Call&nbsp;receiver&nbsp;with&nbsp;arguments&nbsp;and&nbsp;an&nbsp;appropriate&nbsp;subset&nbsp;of&nbsp;named<br>
+&nbsp;<br>
+The&nbsp;effect&nbsp;of&nbsp;this&nbsp;wrapper&nbsp;is&nbsp;to&nbsp;allow&nbsp;for&nbsp;specifying&nbsp;a&nbsp;large&nbsp;number<br>
+of&nbsp;parameters&nbsp;which&nbsp;may&nbsp;not&nbsp;exist&nbsp;in&nbsp;the&nbsp;final&nbsp;function&nbsp;via&nbsp;named<br>
+parameters,&nbsp;and&nbsp;have&nbsp;those&nbsp;parameters&nbsp;ignored&nbsp;in&nbsp;the&nbsp;final&nbsp;call.</tt></dd></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -44,7 +48,9 @@ has&nbsp;its&nbsp;first&nbsp;argument&nbsp;bound</tt></dd></dl>
 <font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
     
 <tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
-<td width="100%"><strong>__cached__</strong> = '/home/mcfletch/OpenGL-dev/pydispatcher/pydispatch/__pycache__/robustapply.cpython-310.pyc'<br>
+<td width="100%"><strong>VAR_ARGS</strong> = 4<br>
+<strong>VAR_NAMES</strong> = 8<br>
+<strong>__cached__</strong> = '/home/mcfletch/OpenGL-dev/pydispatcher/pydispatch/__pycache__/robustapply.cpython-310.pyc'<br>
 <strong>__file__</strong> = '/home/mcfletch/OpenGL-dev/pydispatcher/pydispatch/robustapply.py'<br>
 <strong>__loader__</strong> = &lt;_frozen_importlib_external.SourceFileLoader object&gt;<br>
 <strong>__name__</strong> = 'pydispatch.robustapply'<br>
