@@ -7,7 +7,9 @@ if sys.hexversion >= 0x3000000:
 else:
     im_func = 'im_func'
     im_self = 'im_self'
-def safeRef(target, onDelete = None):
+
+
+def safeRef(target, onDelete=None):
     """Return a *safe* weak reference to a callable target
 
     target -- the object to be weakly referenced, if it's a
@@ -22,16 +24,17 @@ def safeRef(target, onDelete = None):
         if getattr(target, im_self) is not None:
             # Turn a bound method into a BoundMethodWeakref instance.
             # Keep track of these instances for lookup by disconnect().
-            assert hasattr(target, im_func), """safeRef target %r has %s, but no %s, don't know how to create reference"""%( target,im_self,im_func)
-            reference = BoundMethodWeakref(
-                target=target,
-                onDelete=onDelete
+            assert hasattr(target, im_func), (
+                """safeRef target %r has %s, but no %s, don't know how to create reference"""
+                % (target, im_self, im_func)
             )
+            reference = BoundMethodWeakref(target=target, onDelete=onDelete)
             return reference
     if onDelete is not None:
         return weakref.ref(target, onDelete)
     else:
-        return weakref.ref( target )
+        return weakref.ref(target)
+
 
 class BoundMethodWeakref(object):
     """'Safe' and reusable weak references to instance methods
@@ -66,8 +69,10 @@ class BoundMethodWeakref(object):
             same BoundMethodWeakref instance.
 
     """
+
     _allInstances = weakref.WeakValueDictionary()
-    def __new__( cls, target, onDelete=None, *arguments,**named ):
+
+    def __new__(cls, target, onDelete=None, *arguments, **named):
         """Create new instance or return current instance
 
         Basically this method of construction allows us to
@@ -80,15 +85,16 @@ class BoundMethodWeakref(object):
         of already-referenced methods.
         """
         key = cls.calculateKey(target)
-        current =cls._allInstances.get(key)
+        current = cls._allInstances.get(key)
         if current is not None:
-            current.deletionMethods.append( onDelete)
+            # current.deletionMethods.append(onDelete)
             return current
         else:
-            base = super( BoundMethodWeakref, cls).__new__( cls )
+            base = super(BoundMethodWeakref, cls).__new__(cls)
             cls._allInstances[key] = base
-            base.__init__( target, onDelete, *arguments,**named)
+            # base.__init__(target, onDelete, *arguments, **named)
             return base
+
     def __init__(self, target, onDelete=None):
         """Return a weak-reference-like instance for a bound method
 
@@ -103,56 +109,71 @@ class BoundMethodWeakref(object):
             collected).  Should take a single argument,
             which will be passed a pointer to this object.
         """
+
         def remove(weak, self=self):
             """Set self.isDead to true when method or instance is destroyed"""
             methods = self.deletionMethods[:]
             del self.deletionMethods[:]
             try:
-                del self.__class__._allInstances[ self.key ]
+                del self.__class__._allInstances[self.key]
             except KeyError:
                 pass
             for function in methods:
                 try:
-                    if hasattr(function, '__call__' ):
-                        function( self )
+                    if hasattr(function, '__call__'):
+                        function(self)
                 except Exception as e:
                     try:
                         traceback.print_exc()
                     except AttributeError:
-                        print('''Exception during saferef %s cleanup function %s: %s'''%(
-                            self, function, e
-                        ))
-        self.deletionMethods = [onDelete]
-        self.key = self.calculateKey( target )
-        self.weakSelf = weakref.ref(getattr(target,im_self), remove)
-        self.weakFunc = weakref.ref(getattr(target,im_func), remove)
-        self.selfName = getattr(target,im_self).__class__.__name__
-        self.funcName = str(getattr(target,im_func).__name__)
-    def calculateKey( cls, target ):
+                        print(
+                            '''Exception during saferef %s cleanup function %s: %s'''
+                            % (self, function, e)
+                        )
+
+        current = getattr(self, 'deletionMethods', None) or []
+        if onDelete is not None:
+            current.append(onDelete)
+        self.deletionMethods = current
+
+        self.key = self.calculateKey(target)
+        self.weakSelf = weakref.ref(getattr(target, im_self), remove)
+        self.weakFunc = weakref.ref(getattr(target, im_func), remove)
+        self.selfName = getattr(target, im_self).__class__.__name__
+        self.funcName = str(getattr(target, im_func).__name__)
+
+    def calculateKey(cls, target):
         """Calculate the reference key for this reference
 
         Currently this is a two-tuple of the id()'s of the
         target object and the target function respectively.
         """
-        return (id(getattr(target,im_self)),id(getattr(target,im_func)))
-    calculateKey = classmethod( calculateKey )
+        return (id(getattr(target, im_self)), id(getattr(target, im_func)))
+
+    calculateKey = classmethod(calculateKey)
+
     def __str__(self):
         """Give a friendly representation of the object"""
-        return """%s( %s.%s )"""%(
+        return """%s( %s.%s )""" % (
             self.__class__.__name__,
             self.selfName,
             self.funcName,
         )
+
     __repr__ = __str__
-    def __nonzero__( self ):
+
+    def __nonzero__(self):
         """Whether we are still a valid reference"""
         return self() is not None
+
     __bool__ = __nonzero__
-    def __cmp__( self, other ):
+
+    def __cmp__(self, other):
         """Compare with another reference"""
-        if not isinstance (other,self.__class__):
-            return cmp( self.__class__, type(other) )
-        return cmp( self.key, other.key)
+        if not isinstance(other, self.__class__):
+            return cmp(self.__class__, type(other))
+        return cmp(self.key, other.key)
+
     def __call__(self):
         """Return a strong reference to the bound method
 
