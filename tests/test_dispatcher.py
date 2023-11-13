@@ -13,6 +13,11 @@ class Callable(object):
     def a( self, a ):
         return a
 
+class Callable2(object):
+    def a(self, val):
+        disconnect(self.a, "test")
+        return val
+
 class DispatcherTests(unittest.TestCase):
     """Test suite for dispatcher (barely started)"""
 
@@ -139,7 +144,23 @@ class DispatcherTests(unittest.TestCase):
             errors.DispatcherKeyError, 
             dispatcher.disconnect,  x, signal='not-registered'
         )
-        
+    def testDisconnectDuringCall(self):
+        val0 = Callable2()
+        connect(val0.a, "test")
+        val1 = Callable2()
+        connect(val1.a, "test")
+
+        # Then we should have two connections.
+        assert len(list(getAllReceivers(signal = "test"))) == 2
+
+        # When sending the signal
+        result = send("test", val = 10)
+
+        # Then we should get two results
+        assert result == [(val0.a, 10), (val1.a, 10)]
+        # And both connections should be removed
+        assert len(list(getAllReceivers(signal = "test"))) == 0
+
 
 def getSuite():
     return unittest.makeSuite(DispatcherTests,'test')

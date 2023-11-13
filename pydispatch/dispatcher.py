@@ -264,7 +264,7 @@ def liveReceivers(receivers):
 
 
 
-def getAllReceivers( sender = Any, signal = Any ):
+def getAllReceivers( sender = Any, signal = Any, copySlots = True ):
     """Get list of all receivers from global tables
 
     This gets all receivers which should receive
@@ -282,6 +282,8 @@ def getAllReceivers( sender = Any, signal = Any ):
         # Add receivers that receive *any* signal from *any* sender.
         getReceivers( Any, Any ),
     ):
+        if copySlots:
+            set = list(set)
         for receiver in set:
             if receiver: # filter out dead instance-method weakrefs
                 try:
@@ -326,10 +328,12 @@ def send(signal=Any, sender=Anonymous, *arguments, **named):
     possible to not have all receivers called if a raises an
     error.
     """
+    copy_slots = named.pop("copySlots", True)
+
     # Call each receiver with whatever arguments it can accept.
     # Return a list of tuple pairs [(receiver, response), ... ].
     responses = []
-    for receiver in liveReceivers(getAllReceivers(sender, signal)):
+    for receiver in liveReceivers(getAllReceivers(sender, signal, copy_slots)):
         response = robustapply.robustApply(
             receiver,
             signal=signal,
