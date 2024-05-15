@@ -70,7 +70,7 @@ class Tester (unittest.TestCase):
         self.closureCount +=1
 
 def getSuite():
-    return unittest.makeSuite(Tester,'test')
+    return unittest.defaultTestLoader.loadTestsFromTestCase(Tester,'test')
 
 if __name__ == "__main__":
     unittest.main ()

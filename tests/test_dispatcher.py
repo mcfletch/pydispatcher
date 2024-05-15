@@ -142,7 +142,7 @@ class DispatcherTests(unittest.TestCase):
         
 
 def getSuite():
-    return unittest.makeSuite(DispatcherTests,'test')
+    return unittest.defaultTestLoader.loadTestsFromTestCase(DispatcherTests,'test')
         
 if __name__ == "__main__":
     unittest.main ()

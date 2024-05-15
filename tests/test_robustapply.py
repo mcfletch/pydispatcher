@@ -32,7 +32,7 @@ class TestCases(unittest.TestCase):
 
 
 def getSuite():
-    return unittest.makeSuite(TestCases, 'test')
+    return unittest.defaultTestLoader.loadTestsFromTestCase(TestCases, 'test')
 
 
 if __name__ == "__main__":
