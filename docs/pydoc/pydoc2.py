@@ -1,7 +1,9 @@
 """Pydoc sub-class for generating documentation for entire packages"""
-import pydoc, inspect, os, string
-import sys, imp, os, stat, re, types, inspect
-from reprlib import Repr
+import inspect
+import os
+import sys
+
+import pydoc
 
 
 class DefaultFormatter(pydoc.HTMLDoc):
