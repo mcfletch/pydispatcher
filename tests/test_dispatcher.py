@@ -136,10 +136,53 @@ class DispatcherTests(unittest.TestCase):
         )
     def testDisconnectUnconnected(self):
         self.assertRaises(
-            errors.DispatcherKeyError, 
+            errors.DispatcherKeyError,
             dispatcher.disconnect,  x, signal='not-registered'
         )
-        
+
+    def testSharedSenderManyReceivers(self):
+        """Many distinct receivers on one shared sender each fire exactly once.
+
+        Exercises the O(1) presence-index fast path in connect(): wiring N
+        receivers to a single sender must stay correct (no dropped or duplicated
+        receivers) and leave the index consistent with the receiver lists.
+        """
+        sender = Dummy()
+        signal = 'shared'
+        hits = {}
+
+        class R(object):
+            def __init__(self, i):
+                self.i = i
+            def on(self, **named):
+                hits[self.i] = hits.get(self.i, 0) + 1
+
+        receivers = [R(i) for i in range(500)]
+        for r in receivers:
+            connect(r.on, signal, sender)
+        # Re-connecting the same bound methods must dedup, not duplicate.
+        for r in receivers:
+            connect(r.on, signal, sender)
+        send(signal, sender)
+        assert all(hits.get(i) == 1 for i in range(500)), hits
+        assert len(getReceivers(sender, signal)) == 500
+        # The presence index mirrors the receiver list exactly.
+        idx = dispatcher._receiverIndex[id(sender)][signal]
+        assert len(idx) == 500, len(idx)
+        # Disconnecting a subset stops only those, and prunes the index with it.
+        for r in receivers[:200]:
+            disconnect(r.on, signal, sender)
+        hits.clear()
+        send(signal, sender)
+        assert sum(hits.values()) == 300, sum(hits.values())
+        assert len(dispatcher._receiverIndex[id(sender)][signal]) == 300
+        for r in receivers[200:]:
+            disconnect(r.on, signal, sender)
+        del receivers
+        # Everything unwired: connections, back-refs, and the index are empty.
+        assert id(sender) not in dispatcher._receiverIndex, dispatcher._receiverIndex
+        self._isclean()
+
 
 def getSuite():
     return unittest.makeSuite(DispatcherTests,'test')

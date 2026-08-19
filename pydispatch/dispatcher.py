@@ -68,6 +68,49 @@ WEAKREF_TYPES = (weakref.ReferenceType, saferef.BoundMethodWeakref)
 connections = {}
 senders = {}
 sendersBack = {}
+# { senderkey : { signal : set(id(receiver)) } } -- an O(1) presence mirror of
+# the connections receiver lists. connect() consults it to skip the O(len)
+# dedup scan in _removeOldBackRefs when a receiver is provably not yet
+# registered for a (senderkey, signal); without it, wiring N receivers to one
+# shared sender is O(N^2) (a 10k-node scene spent ~25s here on the first frame,
+# every node-path depending on one shared parent Transform's fields). The index
+# is an optimisation hint only: a stale "present" entry costs one harmless scan,
+# and every real append records itself here, so "absent" is always trustworthy.
+_receiverIndex = {}
+
+
+def _indexContains(senderkey, signal, receiverID):
+    try:
+        return receiverID in _receiverIndex[senderkey][signal]
+    except (KeyError, TypeError):
+        return False
+
+
+def _indexAdd(senderkey, signal, receiverID):
+    try:
+        _receiverIndex.setdefault(senderkey, {}).setdefault(signal, set()).add(receiverID)
+    except (TypeError, AttributeError):
+        pass
+
+
+def _indexDiscard(senderkey, signal, receiverID):
+    try:
+        bysignal = _receiverIndex[senderkey]
+        ids = bysignal[signal]
+    except (KeyError, TypeError):
+        return
+    ids.discard(receiverID)
+    if not ids:
+        del bysignal[signal]
+        if not bysignal:
+            del _receiverIndex[senderkey]
+
+
+def _indexDropSender(senderkey):
+    try:
+        _receiverIndex.pop(senderkey, None)
+    except (TypeError, AttributeError):
+        pass
 
 
 def connect(receiver, signal=Any, sender=Any, weak=True):
@@ -151,7 +194,11 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
     # this receiver in the set, including back-references
     if signal in signals:
         receivers = signals[signal]
-        _removeOldBackRefs(senderkey, signal, receiver, receivers)
+        # The dedup scan is only meaningful when this exact receiver might
+        # already be registered here; the presence index answers that in O(1),
+        # turning an O(N^2) shared-sender wire-up into O(N).
+        if _indexContains(senderkey, signal, receiverID):
+            _removeOldBackRefs(senderkey, signal, receiver, receivers)
     else:
         receivers = signals[signal] = []
     try:
@@ -164,6 +211,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
         pass
 
     receivers.append(receiver)
+    _indexAdd(senderkey, signal, receiverID)
 
 
 
@@ -387,6 +435,7 @@ def _removeReceiver(receiver):
                             receivers.remove( receiver )
                         except Exception:
                             pass
+                        _indexDiscard(senderkey, signal, backKey)
                     _cleanupConnections(senderkey, signal)
 
 def _cleanupConnections(senderkey, signal):
@@ -411,6 +460,7 @@ def _cleanupConnections(senderkey, signal):
 def _removeSender(senderkey):
     """Remove senderkey from connections."""
     _removeBackrefs(senderkey)
+    _indexDropSender(senderkey)
     try:
         del connections[senderkey]
     except KeyError:
@@ -455,6 +505,7 @@ def _removeOldBackRefs(senderkey, signal, receiver, receivers):
     else:
         oldReceiver = receivers[index]
         del receivers[index]
+        _indexDiscard(senderkey, signal, id(oldReceiver))
         found = 0
         signals = connections.get(signal)
         if signals is not None:
