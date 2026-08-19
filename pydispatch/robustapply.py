@@ -51,16 +51,20 @@ def robustApply(receiver, *arguments, **named):
     parameters, and have those parameters ignored in the final call.
     """
     receiver, codeObject, startIndex = function(receiver)
-    has_varargs = bool(codeObject.co_flags & VAR_ARGS)
     has_varnames = bool(codeObject.co_flags & VAR_NAMES)
 
     posonly_count = getattr(codeObject, 'co_posonlyargcount', 0)
+    kwonly_count = getattr(codeObject, 'co_kwonlyargcount', 0)
 
+    # co_varnames lists the parameters first -- positional-or-keyword
+    # (co_argcount of them) then keyword-only (co_kwonlyargcount) -- followed by
+    # any *args/**kwargs slot and then the function's ordinary local variables.
+    # The acceptable keyword names are exactly the keyword-only parameters; bound
+    # by co_kwonlyargcount so a local that merely shares a caller's argument name
+    # (e.g. a receiver with an internal ``value`` local) is not mistaken for one.
     posnamed_arguments = codeObject.co_varnames[posonly_count : codeObject.co_argcount]
     named_onlyarguments = codeObject.co_varnames[
-        codeObject.co_argcount : len(codeObject.co_varnames)
-        + (-1 if has_varnames else 0)
-        + (-1 if has_varargs else 0)
+        codeObject.co_argcount : codeObject.co_argcount + kwonly_count
     ]
 
     # Implements: You can't have a parameter in both args and keywords, reporting an easily debugged message
