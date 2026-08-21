@@ -1,11 +1,11 @@
-"""Suppress tests which test python3 specific features when running on python2"""
-import sys, re, os
+"""Suppress tests which test features newer than the running interpreter"""
+import sys, re
 
 TAG_FINDER = re.compile(r'py(?P<major>\d+)_(?P<minor>\d+)\.py[a-z]*$')
 
 
-def pytest_ignore_collect(path, config):
-    match = TAG_FINDER.search(os.path.basename(path))
+def pytest_ignore_collect(collection_path, config):
+    match = TAG_FINDER.search(collection_path.name)
     if match:
         required_major = int(match.group('major'))
         if required_major < sys.version_info.major:

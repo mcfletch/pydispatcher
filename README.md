@@ -40,3 +40,22 @@ dispatcher.connect(callback, sender=MyNode, signal=metaKey)
 dispatcher.send(metaKey, MyNode, event=event)
 ```
 
+
+## Scaling
+
+Two structures keep dispatch cost proportional to the work a signal actually
+implies rather than to the size of the program around it.
+
+**Wiring many receivers to one sender.** `connect()` guards against registering
+the same receiver twice for a `(sender, signal)` pair. An index of what is
+already registered answers that in constant time, so wiring N receivers to a
+shared sender costs O(N) rather than O(N²). The index is an optimisation hint:
+every real registration records itself there, so "not registered" is always
+trustworthy, and a stale "registered" costs one scan and nothing else.
+
+**Calling a receiver.** `robustApply` passes a receiver only the arguments it
+will accept, which means knowing its parameters. Those come from the receiver's
+code object, which never changes, so they are derived once and reused --
+`robustapply.SIGNATURE_CACHE_SIZE` bounds how many are remembered. A call with
+no keyword arguments needs no signature at all, since there is nothing to
+subset.
