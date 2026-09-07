@@ -21,7 +21,7 @@ class DispatcherTests(unittest.TestCase):
         assert len(dispatcher.sendersBack) == 0, dispatcher.sendersBack
         assert len(dispatcher.connections) == 0, dispatcher.connections
         assert len(dispatcher.senders) == 0, dispatcher.senders
-    
+
     def testExact (self):
         a = Dummy()
         signal = 'this'
@@ -56,7 +56,7 @@ class DispatcherTests(unittest.TestCase):
         assert len(list(getAllReceivers(Any,signal))) == 0
 
         self._isclean()
-        
+
     def testAnyRegistration2(self):
         a = Dummy()
         signal = 'this'
@@ -127,11 +127,11 @@ class DispatcherTests(unittest.TestCase):
         assert str(dispatcher.Any) == '_Any', str(dispatcher.Any)
     def testNoNoneSignal(self):
         self.assertRaises(
-            errors.DispatcherTypeError, 
+            errors.DispatcherTypeError,
             dispatcher.connect,  x, signal=None
         )
         self.assertRaises(
-            errors.DispatcherTypeError, 
+            errors.DispatcherTypeError,
             dispatcher.disconnect,  x, signal=None
         )
     def testDisconnectUnconnected(self):
@@ -186,6 +186,6 @@ class DispatcherTests(unittest.TestCase):
 
 def getSuite():
     return unittest.makeSuite(DispatcherTests,'test')
-        
+
 if __name__ == "__main__":
     unittest.main ()

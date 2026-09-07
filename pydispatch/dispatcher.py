@@ -188,7 +188,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
             senders[senderkey] = weakSender
         except:
             pass
-        
+
     receiverID = id(receiver)
     # get current set, remove any current references to
     # this receiver in the set, including back-references
@@ -406,7 +406,7 @@ def sendExact( signal=Any, sender=Anonymous, *arguments, **named ):
         )
         responses.append((receiver, response))
     return responses
-    
+
 
 def _removeReceiver(receiver):
     """Remove receiver from connections."""
@@ -417,7 +417,7 @@ def _removeReceiver(receiver):
     try:
         backSet = sendersBack.pop(backKey)
     except KeyError:
-        return False 
+        return False
     else:
         for senderkey in backSet:
             try:
@@ -465,11 +465,11 @@ def _removeSender(senderkey):
         del connections[senderkey]
     except KeyError:
         pass
-    # Senderkey will only be in senders dictionary if sender 
+    # Senderkey will only be in senders dictionary if sender
     # could be weakly referenced.
-    try: 
+    try:
         del senders[senderkey]
-    except: 
+    except:
         pass
 
 
@@ -519,8 +519,8 @@ def _removeOldBackRefs(senderkey, signal, receiver, receivers):
             _killBackref( oldReceiver, senderkey )
             return True
         return False
-        
-        
+
+
 def _killBackref( receiver, senderkey ):
     """Do the actual removal of back reference from receiver to senderkey"""
     receiverkey = id(receiver)

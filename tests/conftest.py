@@ -1,5 +1,6 @@
 """Suppress tests which test features newer than the running interpreter"""
-import sys, re
+import sys
+import re
 
 TAG_FINDER = re.compile(r'py(?P<major>\d+)_(?P<minor>\d+)\.py[a-z]*$')
 

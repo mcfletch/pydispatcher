@@ -3,8 +3,8 @@ from pydispatch.dispatcher import Any, Anonymous, liveReceivers, getAllReceivers
 from pydispatch.robustapply import robustApply
 
 def sendRobust(
-    signal=Any, 
-    sender=Anonymous, 
+    signal=Any,
+    sender=Anonymous,
     *arguments, **named
 ):
     """Send signal from sender to all connected receivers catching errors

@@ -1,0 +1,70 @@
+name: tests
+
+# Runs when this project's own `develop` is pushed, and on a pull request.
+# `main` is covered by `release.yml`, which calls this workflow and then decides
+# whether the version is worth publishing; a `push:` trigger for main here as
+# well would run the whole matrix twice for every push to it.
+#
+# Nothing here triggers on a sibling project's push. A CI run is for the change
+# just made to *this* repository; the stack is tested together in the
+# development workspace, on real hardware, where the whole suite can run.
+on:
+  push:
+    branches: [develop]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  test:
+    name: ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Dependencies come from PyPI, pre-releases included, which is what a user
+      # gets: a green run says this project works with a stack somebody can
+      # actually install rather than with the checkout next door.
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --pre -e ".[dev]"
+
+      - name: Run the suite
+        run: python -m pytest tests -q
+
+  # There is deliberately no lint or type job here yet. `pyproject.toml` carries
+  # the workspace's ruff and mypy settings, and running them over this
+  # twenty-year-old codebase reports some thirty findings -- bare excepts, loop
+  # variables nobody reads, `hasattr(x, "__call__")`, and a `__cmp__` written
+  # for Python 2 that names a builtin Python 3 does not have. Working through
+  # them is its own piece of work; a gate that is red from the day it is added
+  # gates nothing, and churning old code to green it is what this workspace
+  # says not to do.
+
+  # `requires-python` and the dependency floors are claims about installing, not
+  # about the test matrix, so they are checked where a user meets them: a plain
+  # install of the built sdist, imported from somewhere that is not the checkout.
+  install:
+    name: sdist installs clean
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - name: Build and install the sdist
+        run: |
+          python -m pip install --upgrade pip build
+          python -m build --sdist
+          python -m pip install --pre dist/*.tar.gz
+      - name: Import it from somewhere that is not the checkout
+        run: cd /tmp && python -c "import pydispatch as p; print(p.__version__)"

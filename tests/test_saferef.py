@@ -1,6 +1,6 @@
 from pydispatch.saferef import *
 
-import unittest, time
+import unittest
 
 
 class T1(object):

@@ -1,11 +1,11 @@
-import unittest 
+import unittest
 
 class PackagingTest(unittest.TestCase):
     def test_package_metadata(self):
         try:
-            from importlib import metadata 
+            from importlib import metadata
         except ImportError:
-            pass 
+            pass
         else:
             version = metadata.version("pydispatcher")
             version = [int(x) for x in version.split('.')]

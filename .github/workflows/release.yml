@@ -1,0 +1,121 @@
+name: release
+
+# Every push to main runs the full test matrix; if it is green *and* the version
+# in pydispatch/__init__.py is not already on PyPI, an sdist and a wheel are built and
+# published there by trusted publishing.
+#
+# So a push that does not bump the version is an ordinary CI run, and bumping
+# the version is what cuts a release. Nothing is ever published from a red
+# build: PyPI versions are immutable, and a release number burned on a broken
+# build cannot be taken back.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # The same jobs a pull request runs. Called rather than duplicated, so the
+  # gate cannot drift from the checks.
+  tests:
+    uses: ./.github/workflows/test.yml
+
+  version:
+    name: version
+    needs: tests
+    runs-on: ubuntu-latest
+    outputs:
+      publish: ${{ steps.check.outputs.publish }}
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - id: check
+        name: Is this version already on PyPI?
+        run: |
+          VERSION=$(python -c "import re,pathlib,sys; t=pathlib.Path('pydispatch/__init__.py').read_text(); m=re.search(r'^__version__\s*=\s*[\'\"]([^\'\"]+)', t, re.M); sys.exit('no __version__ in pydispatch/__init__.py') if not m else print(m.group(1))")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          # Only 200 and 404 are answers. Anything else -- a 5xx, a timeout, a
+          # DNS failure -- means PyPI did not tell us, and guessing "not
+          # published" would turn an outage into an upload against a version
+          # that cannot be replaced.
+          CODE=$(curl -sS -o /dev/null -w '%{http_code}' --retry 3 --retry-delay 5 \
+                 "https://pypi.org/pypi/PyDispatcher/$VERSION/json" || echo 000)
+          case "$CODE" in
+            200)
+              echo "PyDispatcher $VERSION is already on PyPI; nothing to publish."
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              ;;
+            404)
+              echo "PyDispatcher $VERSION is not on PyPI; it will be published."
+              echo "publish=true" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "PyPI answered HTTP $CODE for PyDispatcher $VERSION; refusing to guess."
+              exit 1
+              ;;
+          esac
+
+  # Pure Python, so one wheel serves every platform and there is no cibuildwheel
+  # matrix here.
+  build:
+    name: sdist and wheel
+    needs: version
+    if: needs.version.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+      - name: Check the metadata renders on PyPI
+        run: python -m twine check --strict dist/*
+      # The version the check job read and the version actually built have to be
+      # the same thing, or the skip-if-published test was about a different
+      # release than the one about to be uploaded.
+      - name: Confirm the build carries the version that was checked
+        env:
+          EXPECTED: ${{ needs.version.outputs.version }}
+        run: test -f "dist/pydispatcher-$EXPECTED.tar.gz"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: ./dist/*
+
+  publish:
+    name: publish to PyPI
+    needs: [tests, version, build]
+    # The `needs:` gate already requires all three; stating the results as well
+    # keeps the guarantee if someone later edits this workflow -- adding
+    # `always()` to one job would otherwise let a red or partial build reach
+    # PyPI, and that cannot be taken back.
+    if: >-
+      needs.tests.result == 'success' &&
+      needs.version.outputs.publish == 'true' &&
+      needs.build.result == 'success'
+    runs-on: ubuntu-latest
+
+    # Trusted publishing (OIDC): on PyPI, the publisher for this repository names
+    # workflow `release.yml` with the environment field left **blank**, matching
+    # this job, which declares none. A publisher that names an environment will
+    # not match a claim that carries none, and the upload is rejected.
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          # A second net under the version check: a re-run of an
+          # already-published commit is a no-op rather than a failure.
+          skip-existing: true
