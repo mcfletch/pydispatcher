@@ -2,6 +2,7 @@
 import weakref
 import traceback
 import sys
+from typing import Tuple
 
 if sys.hexversion >= 0x3000000:
     im_func = '__func__'
@@ -72,7 +73,10 @@ class BoundMethodWeakref(object):
 
     """
 
-    _allInstances = weakref.WeakValueDictionary()
+    #: Every live reference, by `calculateKey`'s two-tuple of id()s, so that
+    #: two references to the same (object, function) pair are one instance.
+    _allInstances: 'weakref.WeakValueDictionary[Tuple[int, int], BoundMethodWeakref]' = (
+        weakref.WeakValueDictionary())
 
     def __new__(cls, target, onDelete=None, *arguments, **named):
         """Create new instance or return current instance
@@ -144,6 +148,7 @@ class BoundMethodWeakref(object):
         self.selfName = getattr(target, im_self).__class__.__name__
         self.funcName = str(getattr(target, im_func).__name__)
 
+    @classmethod
     def calculateKey(cls, target):
         """Calculate the reference key for this reference
 
@@ -152,7 +157,6 @@ class BoundMethodWeakref(object):
         """
         return (id(getattr(target, im_self)), id(getattr(target, im_func)))
 
-    calculateKey = classmethod(calculateKey)
 
     def __str__(self):
         """Give a friendly representation of the object"""

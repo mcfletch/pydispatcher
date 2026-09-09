@@ -26,6 +26,10 @@ Internal attributes:
         vs. the original code.)
 """
 import weakref
+# `Any` is this module's own public singleton -- the "any sender" marker --
+# so typing's is aliased rather than imported under its own name.
+from typing import Any as _Anything, Dict, List, Set
+
 from pydispatch import saferef, robustapply, errors
 
 class _Parameter:
@@ -65,9 +69,13 @@ Anonymous = _Anonymous()
 
 WEAKREF_TYPES = (weakref.ReferenceType, saferef.BoundMethodWeakref)
 
-connections = {}
-senders = {}
-sendersBack = {}
+# The shapes this module's own docstring gives, said where a checker reads
+# them. `senderkey` and `receiverkey` are `id()` values, so `int`; a signal is
+# whatever a caller connects with, and a receiver is any callable or a weak
+# reference standing in for one.
+connections: Dict[int, Dict[_Anything, List[_Anything]]] = {}
+senders: Dict[int, _Anything] = {}
+sendersBack: Dict[int, List[int]] = {}
 # { senderkey : { signal : set(id(receiver)) } } -- an O(1) presence mirror of
 # the connections receiver lists. connect() consults it to skip the O(len)
 # dedup scan in _removeOldBackRefs when a receiver is provably not yet
@@ -76,7 +84,7 @@ sendersBack = {}
 # every node-path depending on one shared parent Transform's fields). The index
 # is an optimisation hint only: a stale "present" entry costs one harmless scan,
 # and every real append records itself here, so "absent" is always trustworthy.
-_receiverIndex = {}
+_receiverIndex: Dict[int, Dict[_Anything, Set[int]]] = {}
 
 
 def _indexContains(senderkey, signal, receiverID):
