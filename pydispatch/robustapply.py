@@ -37,7 +37,7 @@ def function(receiver):
         return receiver, receiver.__func__.__code__, 1
     if isinstance(receiver, FunctionType):
         return receiver, receiver.__code__, 0
-    if hasattr(receiver, '__call__'):
+    if callable(receiver):
         # Reassign receiver to the actual method that will be called.
         if hasattr(receiver.__call__, im_func) or hasattr(receiver.__call__, im_code):
             receiver = receiver.__call__

@@ -123,7 +123,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
         if weak is True, then receiver must be weak-referencable
         (more precisely saferef.safeRef() must be able to create
         a reference to the receiver).
-    
+
         Receivers are fairly flexible in their specification,
         as the machinery in the robustApply module takes care
         of most of the details regarding figuring out appropriate
@@ -139,25 +139,25 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
             pre-weakrefed receiver references.
 
     signal -- the signal to which the receiver should respond
-    
+
         if Any, receiver will receive any signal from the
         indicated sender (which might also be Any, but is not
         necessarily Any).
-        
+
         Otherwise must be a hashable Python object other than
         None (DispatcherError raised on None).
-        
+
     sender -- the sender to which the receiver should respond
-    
+
         if Any, receiver will receive the indicated signals
         from any sender.
-        
+
         if Anonymous, receiver will only receive indicated
         signals from send/sendExact which do not specify a
         sender, or specify Anonymous explicitly as the sender.
 
         Otherwise can be any python object.
-        
+
     weak -- whether to use weak references to the receiver
         By default, the module will attempt to use weak
         references to the receiver objects.  If this parameter
@@ -186,7 +186,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
         try:
             weakSender = weakref.ref(sender, remove)
             senders[senderkey] = weakSender
-        except:
+        except Exception:
             pass
 
     receiverID = id(receiver)
@@ -207,7 +207,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
             sendersBack[ receiverID ] = current = []
         if senderkey not in current:
             current.append(senderkey)
-    except:
+    except Exception:
         pass
 
     receivers.append(receiver)
@@ -237,7 +237,7 @@ def disconnect(receiver, signal=Any, sender=Any, weak=True):
         will remove routes for deleted objects
         automatically.  It's only necessary to disconnect
         if you want to stop routing to a live object.
-        
+
     returns None, may raise DispatcherTypeError or
         DispatcherKeyError
     """
@@ -245,29 +245,33 @@ def disconnect(receiver, signal=Any, sender=Any, weak=True):
         raise errors.DispatcherTypeError(
             'Signal cannot be None (receiver=%r sender=%r)'%( receiver,sender)
         )
-    if weak: receiver = saferef.safeRef(receiver)
+    if weak:
+        receiver = saferef.safeRef(receiver)
     senderkey = id(sender)
     try:
         signals = connections[senderkey]
         receivers = signals[signal]
-    except KeyError:
+    except KeyError as err:
+        # `from err`: the lookup that failed is what this reports, so the
+        # traceback should show it rather than read as an error raised while
+        # handling one.
         raise errors.DispatcherKeyError(
             """No receivers found for signal %r from sender %r""" %(
                 signal,
                 sender
             )
-        )
+        ) from err
     try:
         # also removes from receivers
         _removeOldBackRefs(senderkey, signal, receiver, receivers)
-    except ValueError:
+    except ValueError as err:
         raise errors.DispatcherKeyError(
             """No connection to receiver %s for signal %s from sender %s""" %(
                 receiver,
                 signal,
                 sender
             )
-        )
+        ) from err
     _cleanupConnections(senderkey, signal)
 
 def getReceivers( sender = Any, signal = Any ):
@@ -342,11 +346,11 @@ def getAllReceivers( sender = Any, signal = Any ):
 
 def send(signal=Any, sender=Anonymous, *arguments, **named):
     """Send signal from sender to all connected receivers.
-    
+
     signal -- (hashable) signal value, see connect for details
 
     sender -- the sender of the signal
-    
+
         if Any, only receivers registered for Any will receive
         the message.
 
@@ -380,9 +384,9 @@ def send(signal=Any, sender=Anonymous, *arguments, **named):
     for receiver in liveReceivers(getAllReceivers(sender, signal)):
         response = robustapply.robustApply(
             receiver,
+            *arguments,
             signal=signal,
             sender=sender,
-            *arguments,
             **named
         )
         responses.append((receiver, response))
@@ -399,9 +403,9 @@ def sendExact( signal=Any, sender=Anonymous, *arguments, **named ):
     for receiver in liveReceivers(getReceivers(sender, signal)):
         response = robustapply.robustApply(
             receiver,
+            *arguments,
             signal=signal,
             sender=sender,
-            *arguments,
             **named
         )
         responses.append((receiver, response))
@@ -442,7 +446,7 @@ def _cleanupConnections(senderkey, signal):
     """Delete any empty signals for senderkey. Delete senderkey if empty."""
     try:
         receivers = connections[senderkey][signal]
-    except:
+    except Exception:
         pass
     else:
         if not receivers:
@@ -469,7 +473,7 @@ def _removeSender(senderkey):
     # could be weakly referenced.
     try:
         del senders[senderkey]
-    except:
+    except Exception:
         pass
 
 
@@ -482,7 +486,7 @@ def _removeBackrefs( senderkey):
     else:
         items = signals.items()
         def allReceivers( ):
-            for signal,set in items:
+            for _signal,set in items:
                 for item in set:
                     yield item
         for receiver in allReceivers():
@@ -528,7 +532,7 @@ def _killBackref( receiver, senderkey ):
     while senderkey in set:
         try:
             set.remove( senderkey )
-        except:
+        except Exception:
             break
     if not set:
         try:

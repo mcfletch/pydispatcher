@@ -122,7 +122,7 @@ class BoundMethodWeakref(object):
                 pass
             for function in methods:
                 try:
-                    if hasattr(function, '__call__'):
+                    if callable(function):
                         function(self)
                 except Exception as e:
                     try:
@@ -169,12 +169,6 @@ class BoundMethodWeakref(object):
         return self() is not None
 
     __bool__ = __nonzero__
-
-    def __cmp__(self, other):
-        """Compare with another reference"""
-        if not isinstance(other, self.__class__):
-            return cmp(self.__class__, type(other))
-        return cmp(self.key, other.key)
 
     def __call__(self):
         """Return a strong reference to the bound method

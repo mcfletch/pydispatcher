@@ -1,7 +1,8 @@
 """Pydoc sub-class for generating documentation for entire packages"""
-import pydoc, inspect, os, string
-import sys, imp, os, stat, re, types, inspect
-from reprlib import Repr
+import pydoc
+import inspect
+import os
+import sys
 
 
 class DefaultFormatter(pydoc.HTMLDoc):
@@ -175,7 +176,7 @@ class DefaultFormatter(pydoc.HTMLDoc):
                     modpkgs.append((file, object.__name__, 1, 0))
             modpkgs.sort()
             # do more recursion here...
-            for (modname, name, ya, yo) in modpkgs:
+            for (modname, _name, _ya, _yo) in modpkgs:
                 packageContext.addInteresting(".".join((object.__name__, modname)))
             items = []
             for (modname, name, ispackage, isshadowed) in modpkgs:
@@ -198,7 +199,7 @@ class DefaultFormatter(pydoc.HTMLDoc):
                         items.append(
                             self.modpkglink((modname, name, ispackage, isshadowed))
                         )
-                except:
+                except Exception:
                     items.append(
                         self.modpkglink((modname, name, ispackage, isshadowed))
                     )
@@ -262,7 +263,7 @@ class PackageDocumentationGenerator:
         for exclusion in exclusions:
             try:
                 self.exclusions[exclusion] = pydoc.locate(exclusion)
-            except pydoc.ErrorDuringImport as value:
+            except pydoc.ErrorDuringImport:
                 self.warn(
                     """Unable to import the module %s which was specified as an exclusion module"""
                     % (repr(exclusion))
@@ -284,7 +285,7 @@ class PackageDocumentationGenerator:
         try:
             self.baseSpecifiers[specifier] = pydoc.locate(specifier)
             self.pending.append(specifier)
-        except pydoc.ErrorDuringImport as value:
+        except pydoc.ErrorDuringImport:
             self.warn(
                 """Unable to import the module %s which was specified as a base module"""
                 % (repr(specifier))
@@ -388,7 +389,7 @@ class PackageDocumentationGenerator:
     def recurseScan(self, objectList):
         """Process the list of modules trying to add each to the
         list of interesting modules"""
-        for key, value in objectList:
+        for _key, value in objectList:
             self.addInteresting(value.__name__)
 
 

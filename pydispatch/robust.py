@@ -8,11 +8,11 @@ def sendRobust(
     *arguments, **named
 ):
     """Send signal from sender to all connected receivers catching errors
-    
+
     signal -- (hashable) signal value, see connect for details
 
     sender -- the sender of the signal
-    
+
         if Any, only receivers registered for Any will receive
         the message.
 
@@ -45,9 +45,9 @@ def sendRobust(
         try:
             response = robustApply(
                 receiver,
+                *arguments,
                 signal=signal,
                 sender=sender,
-                *arguments,
                 **named
             )
         except Exception as err:

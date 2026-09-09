@@ -16,11 +16,10 @@ if __name__ == "__main__":
     modules = [
         "pydispatch",
         "weakref",
-    ]	
+    ]
     pydoc2.PackageDocumentationGenerator(
         baseModules = modules,
         destinationDirectory = ".",
         exclusions = excludes,
         recursionStops = stops,
     ).process ()
-    

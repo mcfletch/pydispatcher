@@ -5,7 +5,6 @@ Run:
     python setup.py install
 to install the package from the source archive.
 """
-import sys, os
 
 from distutils.core import setup
 

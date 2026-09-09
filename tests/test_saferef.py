@@ -21,14 +21,14 @@ class Tester(unittest.TestCase):
     def setUp(self):
         ts = []
         ss = []
-        for x in range(5000):
+        for _x in range(5000):
             t = T1()
             ts.append(t)
             s = safeRef(t.x, self._closure)
             ss.append(s)
         ts.append(t2)
         ss.append(safeRef(t2, self._closure))
-        for x in range(30):
+        for _x in range(30):
             t = T2()
             ts.append(t)
             s = safeRef(t, self._closure)
@@ -83,7 +83,7 @@ class Tester(unittest.TestCase):
 
     def test_multipleRegistration(self):
         """GH#5 Test that doing multiple saferefs to the same object results in all callbacks being registered and called back"""
-        for iteration in range(5):
+        for _iteration in range(5):
             callback, check = check_callback()
             test = T1()
 
