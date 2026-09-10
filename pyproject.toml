@@ -55,3 +55,9 @@ ignore = [
 python_version = "3.12"
 ignore_missing_imports = true
 follow_imports = "silent"
+# Every definition states its types, and a body is checked rather than skipped.
+# This package is under everything else here, so what it declares is what a
+# checker reads about every signal a program connects and sends.
+check_untyped_defs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true

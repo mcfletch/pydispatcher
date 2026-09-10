@@ -28,13 +28,13 @@ Internal attributes:
 import weakref
 # `Any` is this module's own public singleton -- the "any sender" marker --
 # so typing's is aliased rather than imported under its own name.
-from typing import Any as _Anything, Dict, List, Set
+from typing import Any as _Anything, Dict, Iterator, List, Set
 
 from pydispatch import saferef, robustapply, errors
 
 class _Parameter:
     """Used to represent default parameter values."""
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__class__.__name__
 
 class _Any(_Parameter):
@@ -87,21 +87,21 @@ sendersBack: Dict[int, List[int]] = {}
 _receiverIndex: Dict[int, Dict[_Anything, Set[int]]] = {}
 
 
-def _indexContains(senderkey, signal, receiverID):
+def _indexContains(senderkey: _Anything, signal: _Anything, receiverID: int) -> bool:
     try:
         return receiverID in _receiverIndex[senderkey][signal]
     except (KeyError, TypeError):
         return False
 
 
-def _indexAdd(senderkey, signal, receiverID):
+def _indexAdd(senderkey: _Anything, signal: _Anything, receiverID: int) -> None:
     try:
         _receiverIndex.setdefault(senderkey, {}).setdefault(signal, set()).add(receiverID)
     except (TypeError, AttributeError):
         pass
 
 
-def _indexDiscard(senderkey, signal, receiverID):
+def _indexDiscard(senderkey: _Anything, signal: _Anything, receiverID: int) -> None:
     try:
         bysignal = _receiverIndex[senderkey]
         ids = bysignal[signal]
@@ -114,14 +114,15 @@ def _indexDiscard(senderkey, signal, receiverID):
             del _receiverIndex[senderkey]
 
 
-def _indexDropSender(senderkey):
+def _indexDropSender(senderkey: _Anything) -> None:
     try:
         _receiverIndex.pop(senderkey, None)
     except (TypeError, AttributeError):
         pass
 
 
-def connect(receiver, signal=Any, sender=Any, weak=True):
+def connect(receiver: _Anything, signal: _Anything = Any, sender: _Anything = Any,
+            weak: bool = True) -> None:
     """Connect receiver to sender for signal
 
     receiver -- a callable Python object which is to receive
@@ -187,7 +188,7 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
     # Keep track of senders for cleanup.
     # Is Anonymous something we want to clean up?
     if sender not in (None, Anonymous, Any):
-        def remove(object, senderkey=senderkey):
+        def remove(object: _Anything, senderkey: _Anything = senderkey) -> None:
             _removeSender(senderkey=senderkey)
         # Skip objects that can not be weakly referenced, which means
         # they won't be automatically cleaned up, but that's too bad.
@@ -223,7 +224,8 @@ def connect(receiver, signal=Any, sender=Any, weak=True):
 
 
 
-def disconnect(receiver, signal=Any, sender=Any, weak=True):
+def disconnect(receiver: _Anything, signal: _Anything = Any, sender: _Anything = Any,
+               weak: bool = True) -> None:
     """Disconnect receiver from sender for signal
 
     receiver -- the registered receiver to disconnect
@@ -282,7 +284,7 @@ def disconnect(receiver, signal=Any, sender=Any, weak=True):
         ) from err
     _cleanupConnections(senderkey, signal)
 
-def getReceivers( sender = Any, signal = Any ):
+def getReceivers( sender: _Anything = Any, signal: _Anything = Any ) -> List[_Anything]:
     """Get list of receivers from global tables
 
     This utility function allows you to retrieve the
@@ -305,7 +307,7 @@ def getReceivers( sender = Any, signal = Any ):
     except KeyError:
         return []
 
-def liveReceivers(receivers):
+def liveReceivers(receivers: _Anything) -> Iterator[_Anything]:
     """Filter sequence of receivers to get resolved, live receivers
 
     This is a generator which will iterate over
@@ -324,7 +326,7 @@ def liveReceivers(receivers):
 
 
 
-def getAllReceivers( sender = Any, signal = Any ):
+def getAllReceivers( sender: _Anything = Any, signal: _Anything = Any ) -> Iterator[_Anything]:
     """Get list of all receivers from global tables
 
     This gets all receivers which should receive
@@ -352,7 +354,8 @@ def getAllReceivers( sender = Any, signal = Any ):
                     # dead weakrefs raise TypeError on hash...
                     pass
 
-def send(signal=Any, sender=Anonymous, *arguments, **named):
+def send(signal: _Anything = Any, sender: _Anything = Anonymous, *arguments: _Anything,
+         **named: _Anything) -> List[_Anything]:
     """Send signal from sender to all connected receivers.
 
     signal -- (hashable) signal value, see connect for details
@@ -399,7 +402,8 @@ def send(signal=Any, sender=Anonymous, *arguments, **named):
         )
         responses.append((receiver, response))
     return responses
-def sendExact( signal=Any, sender=Anonymous, *arguments, **named ):
+def sendExact( signal: _Anything = Any, sender: _Anything = Anonymous, *arguments: _Anything,
+               **named: _Anything ) -> List[_Anything]:
     """Send signal only to those receivers registered for exact message
 
     sendExact allows for avoiding Any/Anonymous registered
@@ -420,16 +424,20 @@ def sendExact( signal=Any, sender=Anonymous, *arguments, **named ):
     return responses
 
 
-def _removeReceiver(receiver):
-    """Remove receiver from connections."""
+def _removeReceiver(receiver: _Anything) -> None:
+    """Remove receiver from connections.
+
+    Answers nothing: this is what a safe reference calls as it dies, and
+    ``safeRef`` neither reads the answer nor has anyone to hand it to.
+    """
     if not sendersBack:
         # During module cleanup the mapping will be replaced with None
-        return False
+        return
     backKey = id(receiver)
     try:
         backSet = sendersBack.pop(backKey)
     except KeyError:
-        return False
+        return
     else:
         for senderkey in backSet:
             try:
@@ -450,7 +458,7 @@ def _removeReceiver(receiver):
                         _indexDiscard(senderkey, signal, backKey)
                     _cleanupConnections(senderkey, signal)
 
-def _cleanupConnections(senderkey, signal):
+def _cleanupConnections(senderkey: _Anything, signal: _Anything) -> None:
     """Delete any empty signals for senderkey. Delete senderkey if empty."""
     try:
         receivers = connections[senderkey][signal]
@@ -469,7 +477,7 @@ def _cleanupConnections(senderkey, signal):
                     # No more signal connections. Therefore, remove the sender.
                     _removeSender(senderkey)
 
-def _removeSender(senderkey):
+def _removeSender(senderkey: _Anything) -> None:
     """Remove senderkey from connections."""
     _removeBackrefs(senderkey)
     _indexDropSender(senderkey)
@@ -485,22 +493,21 @@ def _removeSender(senderkey):
         pass
 
 
-def _removeBackrefs( senderkey):
+def _removeBackrefs( senderkey: _Anything ) -> None:
     """Remove all back-references to this senderkey"""
-    try:
-        signals = connections[senderkey]
-    except KeyError:
-        signals = None
-    else:
-        items = signals.items()
-        def allReceivers( ):
-            for _signal,set in items:
-                for item in set:
-                    yield item
-        for receiver in allReceivers():
-            _killBackref( receiver, senderkey )
+    signals = connections.get( senderkey )
+    if signals is None:
+        return
+    items = list(signals.items())
+    def allReceivers( ) -> Iterator[_Anything]:
+        for _signal,set in items:
+            for item in set:
+                yield item
+    for receiver in allReceivers():
+        _killBackref( receiver, senderkey )
 
-def _removeOldBackRefs(senderkey, signal, receiver, receivers):
+def _removeOldBackRefs(senderkey: _Anything, signal: _Anything, receiver: _Anything,
+                       receivers: _Anything) -> bool:
     """Kill old sendersBack references from receiver
 
     This guards against multiple registration of the same
@@ -533,10 +540,12 @@ def _removeOldBackRefs(senderkey, signal, receiver, receivers):
         return False
 
 
-def _killBackref( receiver, senderkey ):
+def _killBackref( receiver: _Anything, senderkey: _Anything ) -> bool:
     """Do the actual removal of back reference from receiver to senderkey"""
     receiverkey = id(receiver)
-    set = sendersBack.get( receiverkey, () )
+    set = sendersBack.get( receiverkey )
+    if set is None:
+        return True
     while senderkey in set:
         try:
             set.remove( senderkey )

@@ -7,7 +7,8 @@ those which are acceptable.
 """
 import sys
 from functools import lru_cache
-from types import FunctionType, MethodType
+from types import CodeType, FunctionType, MethodType
+from typing import Any, Callable, Tuple
 
 if sys.hexversion >= 0x3000000:
     im_func = '__func__'
@@ -21,7 +22,7 @@ else:
     func_code = 'func_code'
 
 
-def function(receiver):
+def function(receiver: Any) -> Tuple[Callable[..., Any], CodeType, int]:
     """Get function-like callable object for given receiver
 
     returns (function_or_method, codeObject, fromMethod)
@@ -62,7 +63,9 @@ SIGNATURE_CACHE_SIZE = 4096
 
 
 @lru_cache(maxsize=SIGNATURE_CACHE_SIZE)
-def _signature(codeObject):
+def _signature(codeObject: CodeType) -> Tuple[bool, int, Tuple[str, ...],
+                                             Tuple[str, ...],
+                                             Tuple[str, ...]]:
     """What robustApply needs to know about a receiver's parameters
 
     Returns ``(has_varnames, posonly_count, positional_names,
@@ -88,7 +91,7 @@ def _signature(codeObject):
     )
 
 
-def robustApply(receiver, *arguments, **named):
+def robustApply(receiver: Any, *arguments: Any, **named: Any) -> Any:
     """Call receiver with arguments and an appropriate subset of named
 
     The effect of this wrapper is to allow for specifying a large number

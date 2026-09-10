@@ -2,7 +2,7 @@
 import weakref
 import traceback
 import sys
-from typing import Tuple
+from typing import Any, Callable, Optional, Tuple
 
 if sys.hexversion >= 0x3000000:
     im_func = '__func__'
@@ -12,7 +12,8 @@ else:
     im_self = 'im_self'
 
 
-def safeRef(target, onDelete=None):
+def safeRef(target: Any,
+            onDelete: Optional[Callable[[Any], None]] = None) -> Any:
     """Return a *safe* weak reference to a callable target
 
     target -- the object to be weakly referenced, if it's a
@@ -78,7 +79,9 @@ class BoundMethodWeakref(object):
     _allInstances: 'weakref.WeakValueDictionary[Tuple[int, int], BoundMethodWeakref]' = (
         weakref.WeakValueDictionary())
 
-    def __new__(cls, target, onDelete=None, *arguments, **named):
+    def __new__(cls, target: Any,
+                onDelete: Optional[Callable[[Any], None]] = None,
+                *arguments: Any, **named: Any) -> 'BoundMethodWeakref':
         """Create new instance or return current instance
 
         Basically this method of construction allows us to
@@ -101,7 +104,8 @@ class BoundMethodWeakref(object):
             # base.__init__(target, onDelete, *arguments, **named)
             return base
 
-    def __init__(self, target, onDelete=None):
+    def __init__(self, target: Any,
+                 onDelete: Optional[Callable[[Any], None]] = None) -> None:
         """Return a weak-reference-like instance for a bound method
 
         target -- the instance-method target for the weak
@@ -116,7 +120,7 @@ class BoundMethodWeakref(object):
             which will be passed a pointer to this object.
         """
 
-        def remove(weak, self=self):
+        def remove(weak: Any, self: 'BoundMethodWeakref' = self) -> None:
             """Set self.isDead to true when method or instance is destroyed"""
             methods = self.deletionMethods[:]
             del self.deletionMethods[:]
@@ -149,7 +153,7 @@ class BoundMethodWeakref(object):
         self.funcName = str(getattr(target, im_func).__name__)
 
     @classmethod
-    def calculateKey(cls, target):
+    def calculateKey(cls, target: Any) -> Tuple[int, int]:
         """Calculate the reference key for this reference
 
         Currently this is a two-tuple of the id()'s of the
@@ -158,7 +162,7 @@ class BoundMethodWeakref(object):
         return (id(getattr(target, im_self)), id(getattr(target, im_func)))
 
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Give a friendly representation of the object"""
         return """%s( %s.%s )""" % (
             self.__class__.__name__,
@@ -168,13 +172,13 @@ class BoundMethodWeakref(object):
 
     __repr__ = __str__
 
-    def __nonzero__(self):
+    def __nonzero__(self) -> bool:
         """Whether we are still a valid reference"""
         return self() is not None
 
     __bool__ = __nonzero__
 
-    def __call__(self):
+    def __call__(self) -> Any:
         """Return a strong reference to the bound method
 
         If the target cannot be retrieved, then will
