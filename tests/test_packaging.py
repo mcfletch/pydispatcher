@@ -20,11 +20,22 @@ class PackagingTest(unittest.TestCase):
         assert os.path.exists(marker), marker
 
     def test_package_metadata(self):
-        try:
-            from importlib import metadata
-        except ImportError:
-            pass
-        else:
-            version = metadata.version("pydispatcher")
-            version = [int(x) for x in version.split('.')]
-            assert version >= [2,0,7], "Our installed version did not pick up configured attribute pydispatch.__version__"
+        """The version a consumer reads is the one the module declares.
+
+        `pydispatch.__version__` is the only place the number is written, and
+        the packaging reads it from there. An install that answers with a
+        different number is one whose metadata was built before the attribute
+        moved -- which is what the `cache-keys` entry in `pyproject.toml`
+        exists to prevent, and what a dependent resolving against PyPI instead
+        of this checkout looks like from the inside.
+
+        Compared as the strings they are, rather than as numbers: a version is
+        `2.0.9a1` as readily as `2.0.9`, and a pre-release is not a lesser kind
+        of release to a resolver.
+        """
+        from importlib import metadata
+        import pydispatch
+        installed = metadata.version('pydispatcher')
+        assert installed == pydispatch.__version__, (
+            'the installed metadata says %s and pydispatch.__version__ says %s'
+            % (installed, pydispatch.__version__))

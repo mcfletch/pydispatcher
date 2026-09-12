@@ -30,25 +30,25 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      # Dependencies come from PyPI, pre-releases included, which is what a user
-      # gets: a green run says this project works with a stack somebody can
-      # actually install rather than with the checkout next door.
-      - name: Install
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install --pre -e ".[dev]"
+      - name: Install tox
+        run: python -m pip install --upgrade pip tox tox-gh
 
-      - name: Run the suite
-        run: python -m pytest tests -q
+      # tox-gh reads the [gh] table in tox.ini and runs the environments mapped
+      # to this interpreter: the suite on every row, and `typecheck` as well on
+      # 3.12. The test dependencies come from `test-requirements.txt`, which is
+      # the list a developer's own `tox` run uses -- one list rather than two
+      # that drift apart while both look maintained.
+      - name: Run tox
+        run: tox
 
-  # There is deliberately no lint or type job here yet. `pyproject.toml` carries
-  # the workspace's ruff and mypy settings, and running them over this
-  # twenty-year-old codebase reports some thirty findings -- bare excepts, loop
-  # variables nobody reads, `hasattr(x, "__call__")`, and a `__cmp__` written
-  # for Python 2 that names a builtin Python 3 does not have. Working through
-  # them is its own piece of work; a gate that is red from the day it is added
-  # gates nothing, and churning old code to green it is what this workspace
-  # says not to do.
+  # mypy gates a merge, through tox's `typecheck` environment on the 3.12 row.
+  # Ruff does not yet: `pyproject.toml` carries the workspace's settings, and
+  # running them over this twenty-year-old codebase reports some thirty findings
+  # -- bare excepts, loop variables nobody reads, `hasattr(x, "__call__")`, and
+  # a `__cmp__` written for Python 2 that names a builtin Python 3 does not
+  # have. Working through them is its own piece of work; a gate that is red from
+  # the day it is added gates nothing, and churning old code to green it is what
+  # this workspace says not to do.
 
   # `requires-python` and the dependency floors are claims about installing, not
   # about the test matrix, so they are checked where a user meets them: a plain
