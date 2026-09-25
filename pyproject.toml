@@ -54,12 +54,38 @@ cache-keys = [{ file = "pyproject.toml" }, { file = "pydispatch/__init__.py" }]
 # The workspace's E/W/F/B base. This is a twenty-year-old codebase and the star
 # imports in its tests are how they have always been written, so they are
 # allowed rather than churned out -- the rule the workspace states for old code.
+[tool.openglcontext-checks]
+# The OGC rules (openglcontext-checks) this project is clean of, held by
+# the workspace preflight. The others join as the project reaches zero of
+# each; the counts are in openglcontext/plans/DEFECT-PREVENTION.md.
+select = ["OGC121", "OGC141", "OGC161", "OGC201", "OGC221", "OGC223"]
+
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+# The floor `requires-python` names: the annotations are evaluated at import,
+# so a fix that needs a newer Python would break the oldest supported one.
+target-version = "py39"
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "B"]
+select = [
+    "E", "W", "F", "B", "PGH003", "PGH004", "PLE0604", "PLE0605",
+    # A noqa that silences nothing, and mutable class attributes left unannotated.
+    "RUF100", "RUF012",
+    # Errors skipped in a loop, a bare except, and an error logged without its traceback.
+    "S112", "E722", "TRY400",
+    # Naive datetimes.
+    "DTZ",
+    # exec, eval, pickle loads, tarfile extraction and urlopen on unchecked input.
+    "S102", "S202", "S301", "S307", "S310",
+    # `Union[X, Y]` where the target Python can write `X | Y`.
+    "UP007",
+    # Builtin and `collections.abc` generics rather than typing's aliases.
+    "UP006", "UP035",
+    # An error swallowed by a blind or silent except.
+    "S110", "BLE001",
+    # Imports inside functions, private names reached from outside, unused arguments.
+    "PLC0415", "SLF001", "ARG",
+]
 ignore = [
     "E501",  # long lines, kept readable by hand rather than hard-wrapped
     "E741",  # ambiguous name -- `l` reads naturally in this code

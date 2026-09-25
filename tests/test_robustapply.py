@@ -3,6 +3,9 @@ from pydispatch import robustapply
 
 import unittest
 
+# The cache behind robustApply, whose hit and miss counts these tests read.
+signature = robustapply._signature  # noqa: SLF001 the tests measure the signature cache
+
 
 def noArgument():
     pass
@@ -33,23 +36,23 @@ class TestCases(unittest.TestCase):
     def test_signature_is_derived_once_per_code_object(self):
         """Everything robustApply needs about a receiver comes from its code
         object, which never changes: derive it once and reuse it."""
-        robustapply._signature.cache_clear()
+        signature.cache_clear()
         for _ in range(5):
             robustApply(twoArgument, "this", other="that")
-        info = robustapply._signature.cache_info()
+        info = signature.cache_info()
         self.assertEqual(info.misses, 1)
         self.assertEqual(info.hits, 4)
 
     def test_a_call_with_no_keywords_needs_no_signature_at_all(self):
         """With nothing to subset, there is nothing to look up."""
-        robustapply._signature.cache_clear()
+        signature.cache_clear()
         robustApply(twoArgument, "this", "that")
-        info = robustapply._signature.cache_info()
+        info = signature.cache_info()
         self.assertEqual((info.misses, info.hits), (0, 0))
 
     def test_distinct_signatures_are_not_confused(self):
         """Receivers are told apart by code object, not by name or arity."""
-        robustapply._signature.cache_clear()
+        signature.cache_clear()
         seen = []
 
         def keyworded(alpha, **rest):

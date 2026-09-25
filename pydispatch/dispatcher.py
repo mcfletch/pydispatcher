@@ -26,9 +26,10 @@ Internal attributes:
         vs. the original code.)
 """
 import weakref
+from collections.abc import Iterator
 # `Any` is this module's own public singleton -- the "any sender" marker --
 # so typing's is aliased rather than imported under its own name.
-from typing import Any as _Anything, Dict, Iterator, List, Set
+from typing import Any as _Anything
 
 from pydispatch import saferef, robustapply, errors
 
@@ -73,9 +74,9 @@ WEAKREF_TYPES = (weakref.ReferenceType, saferef.BoundMethodWeakref)
 # them. `senderkey` and `receiverkey` are `id()` values, so `int`; a signal is
 # whatever a caller connects with, and a receiver is any callable or a weak
 # reference standing in for one.
-connections: Dict[int, Dict[_Anything, List[_Anything]]] = {}
-senders: Dict[int, _Anything] = {}
-sendersBack: Dict[int, List[int]] = {}
+connections: dict[int, dict[_Anything, list[_Anything]]] = {}
+senders: dict[int, _Anything] = {}
+sendersBack: dict[int, list[int]] = {}
 # { senderkey : { signal : set(id(receiver)) } } -- an O(1) presence mirror of
 # the connections receiver lists. connect() consults it to skip the O(len)
 # dedup scan in _removeOldBackRefs when a receiver is provably not yet
@@ -84,7 +85,7 @@ sendersBack: Dict[int, List[int]] = {}
 # every node-path depending on one shared parent Transform's fields). The index
 # is an optimisation hint only: a stale "present" entry costs one harmless scan,
 # and every real append records itself here, so "absent" is always trustworthy.
-_receiverIndex: Dict[int, Dict[_Anything, Set[int]]] = {}
+_receiverIndex: dict[int, dict[_Anything, set[int]]] = {}
 
 
 def _indexContains(senderkey: _Anything, signal: _Anything, receiverID: int) -> bool:
@@ -188,15 +189,16 @@ def connect(receiver: _Anything, signal: _Anything = Any, sender: _Anything = An
     # Keep track of senders for cleanup.
     # Is Anonymous something we want to clean up?
     if sender not in (None, Anonymous, Any):
-        def remove(object: _Anything, senderkey: _Anything = senderkey) -> None:
+        def remove(_ref: _Anything, senderkey: _Anything = senderkey) -> None:
             _removeSender(senderkey=senderkey)
-        # Skip objects that can not be weakly referenced, which means
-        # they won't be automatically cleaned up, but that's too bad.
+        # A sender that cannot be weakly referenced (a str, an int, a tuple)
+        # is not recorded here, so its connections stay until disconnected.
         try:
             weakSender = weakref.ref(sender, remove)
-            senders[senderkey] = weakSender
-        except Exception:
+        except TypeError:
             pass
+        else:
+            senders[senderkey] = weakSender
 
     receiverID = id(receiver)
     # get current set, remove any current references to
@@ -210,14 +212,11 @@ def connect(receiver: _Anything, signal: _Anything = Any, sender: _Anything = An
             _removeOldBackRefs(senderkey, signal, receiver, receivers)
     else:
         receivers = signals[signal] = []
-    try:
-        current = sendersBack.get( receiverID )
-        if current is None:
-            sendersBack[ receiverID ] = current = []
-        if senderkey not in current:
-            current.append(senderkey)
-    except Exception:
-        pass
+    current = sendersBack.get( receiverID )
+    if current is None:
+        sendersBack[ receiverID ] = current = []
+    if senderkey not in current:
+        current.append(senderkey)
 
     receivers.append(receiver)
     _indexAdd(senderkey, signal, receiverID)
@@ -284,7 +283,7 @@ def disconnect(receiver: _Anything, signal: _Anything = Any, sender: _Anything =
         ) from err
     _cleanupConnections(senderkey, signal)
 
-def getReceivers( sender: _Anything = Any, signal: _Anything = Any ) -> List[_Anything]:
+def getReceivers( sender: _Anything = Any, signal: _Anything = Any ) -> list[_Anything]:
     """Get list of receivers from global tables
 
     This utility function allows you to retrieve the
@@ -355,7 +354,7 @@ def getAllReceivers( sender: _Anything = Any, signal: _Anything = Any ) -> Itera
                     pass
 
 def send(signal: _Anything = Any, sender: _Anything = Anonymous, *arguments: _Anything,
-         **named: _Anything) -> List[_Anything]:
+         **named: _Anything) -> list[_Anything]:
     """Send signal from sender to all connected receivers.
 
     signal -- (hashable) signal value, see connect for details
@@ -403,7 +402,7 @@ def send(signal: _Anything = Any, sender: _Anything = Anonymous, *arguments: _An
         responses.append((receiver, response))
     return responses
 def sendExact( signal: _Anything = Any, sender: _Anything = Anonymous, *arguments: _Anything,
-               **named: _Anything ) -> List[_Anything]:
+               **named: _Anything ) -> list[_Anything]:
     """Send signal only to those receivers registered for exact message
 
     sendExact allows for avoiding Any/Anonymous registered
@@ -453,7 +452,7 @@ def _removeReceiver(receiver: _Anything) -> None:
                     else:
                         try:
                             receivers.remove( receiver )
-                        except Exception:
+                        except ValueError:
                             pass
                         _indexDiscard(senderkey, signal, backKey)
                     _cleanupConnections(senderkey, signal)
@@ -462,7 +461,7 @@ def _cleanupConnections(senderkey: _Anything, signal: _Anything) -> None:
     """Delete any empty signals for senderkey. Delete senderkey if empty."""
     try:
         receivers = connections[senderkey][signal]
-    except Exception:
+    except KeyError:
         pass
     else:
         if not receivers:
@@ -489,7 +488,7 @@ def _removeSender(senderkey: _Anything) -> None:
     # could be weakly referenced.
     try:
         del senders[senderkey]
-    except Exception:
+    except KeyError:
         pass
 
 
@@ -549,7 +548,7 @@ def _killBackref( receiver: _Anything, senderkey: _Anything ) -> bool:
     while senderkey in set:
         try:
             set.remove( senderkey )
-        except Exception:
+        except ValueError:
             break
     if not set:
         try:

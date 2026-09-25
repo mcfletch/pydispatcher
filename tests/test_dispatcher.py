@@ -154,7 +154,7 @@ class DispatcherTests(unittest.TestCase):
         class R(object):
             def __init__(self, i):
                 self.i = i
-            def on(self, **named):
+            def on(self):
                 hits[self.i] = hits.get(self.i, 0) + 1
 
         receivers = [R(i) for i in range(500)]
@@ -167,7 +167,7 @@ class DispatcherTests(unittest.TestCase):
         assert all(hits.get(i) == 1 for i in range(500)), hits
         assert len(getReceivers(sender, signal)) == 500
         # The presence index mirrors the receiver list exactly.
-        idx = dispatcher._receiverIndex[id(sender)][signal]
+        idx = dispatcher._receiverIndex[id(sender)][signal]  # noqa: SLF001 the presence index is checked against the receiver lists
         assert len(idx) == 500, len(idx)
         # Disconnecting a subset stops only those, and prunes the index with it.
         for r in receivers[:200]:
@@ -175,12 +175,12 @@ class DispatcherTests(unittest.TestCase):
         hits.clear()
         send(signal, sender)
         assert sum(hits.values()) == 300, sum(hits.values())
-        assert len(dispatcher._receiverIndex[id(sender)][signal]) == 300
+        assert len(dispatcher._receiverIndex[id(sender)][signal]) == 300  # noqa: SLF001 the presence index is checked against the receiver lists
         for r in receivers[200:]:
             disconnect(r.on, signal, sender)
         del receivers
         # Everything unwired: connections, back-refs, and the index are empty.
-        assert id(sender) not in dispatcher._receiverIndex, dispatcher._receiverIndex
+        assert id(sender) not in dispatcher._receiverIndex, dispatcher._receiverIndex  # noqa: SLF001 the presence index is checked against the receiver lists
         self._isclean()
 
 

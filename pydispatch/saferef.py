@@ -2,7 +2,7 @@
 import weakref
 import traceback
 import sys
-from typing import Any, Callable, Optional, Tuple
+from typing import Any, Callable, Optional
 
 if sys.hexversion >= 0x3000000:
     im_func = '__func__'
@@ -76,12 +76,12 @@ class BoundMethodWeakref(object):
 
     #: Every live reference, by `calculateKey`'s two-tuple of id()s, so that
     #: two references to the same (object, function) pair are one instance.
-    _allInstances: 'weakref.WeakValueDictionary[Tuple[int, int], BoundMethodWeakref]' = (
+    _allInstances: 'weakref.WeakValueDictionary[tuple[int, int], BoundMethodWeakref]' = (
         weakref.WeakValueDictionary())
 
     def __new__(cls, target: Any,
-                onDelete: Optional[Callable[[Any], None]] = None,
-                *arguments: Any, **named: Any) -> 'BoundMethodWeakref':
+                onDelete: Optional[Callable[[Any], None]] = None,  # noqa: ARG004 __new__ takes the arguments __init__ is called with; __init__ records it
+                ) -> 'BoundMethodWeakref':
         """Create new instance or return current instance
 
         Basically this method of construction allows us to
@@ -120,19 +120,19 @@ class BoundMethodWeakref(object):
             which will be passed a pointer to this object.
         """
 
-        def remove(weak: Any, self: 'BoundMethodWeakref' = self) -> None:
+        def remove(_weak: Any, self: 'BoundMethodWeakref' = self) -> None:
             """Set self.isDead to true when method or instance is destroyed"""
             methods = self.deletionMethods[:]
             del self.deletionMethods[:]
             try:
-                del self.__class__._allInstances[self.key]
+                del self._allInstances[self.key]
             except KeyError:
                 pass
             for function in methods:
                 try:
                     if callable(function):
                         function(self)
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001 one failing deletion callback must not stop the others; its traceback is printed
                     try:
                         traceback.print_exc()
                     except AttributeError:
@@ -153,7 +153,7 @@ class BoundMethodWeakref(object):
         self.funcName = str(getattr(target, im_func).__name__)
 
     @classmethod
-    def calculateKey(cls, target: Any) -> Tuple[int, int]:
+    def calculateKey(cls, target: Any) -> tuple[int, int]:
         """Calculate the reference key for this reference
 
         Currently this is a two-tuple of the id()'s of the

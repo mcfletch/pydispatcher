@@ -98,7 +98,7 @@ class Tester(unittest.TestCase):
 
             assert len(check()) == 1, check()
 
-    def _closure(self, ref):
+    def _closure(self, _ref):
         """Dumb utility mechanism to increment deletion counter"""
         self.closureCount += 1
 

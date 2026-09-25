@@ -12,7 +12,7 @@ def doSomethingElse( signal, **named ):
     parameter, which allows a method to receive all
     remaining parameters from the send call.
     """
-    print('  doSomethingElse', named)
+    print('  doSomethingElse', signal, named)
 def doDefault( ):
     """Sample method to receive All signals
 

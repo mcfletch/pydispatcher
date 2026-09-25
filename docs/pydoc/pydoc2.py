@@ -3,6 +3,7 @@ import pydoc
 import inspect
 import os
 import sys
+from urllib.request import pathname2url
 
 
 class DefaultFormatter(pydoc.HTMLDoc):
@@ -26,7 +27,7 @@ class DefaultFormatter(pydoc.HTMLDoc):
         except TypeError:
             return super().section(*args)
 
-    def docmodule(self, object, name=None, mod=None, packageContext=None, *ignored):
+    def docmodule(self, object, name=None, mod=None, packageContext=None, *ignored):  # noqa: ARG002 the signature pydoc.HTMLDoc.docmodule is called with
         """Produce HTML documentation for a module object."""
         name = object.__name__  # ignore the passed-in name
         parts = name.split(".")
@@ -42,9 +43,7 @@ class DefaultFormatter(pydoc.HTMLDoc):
             path = inspect.getabsfile(object)
             url = path
             if sys.platform == "win32":
-                import nturl2path
-
-                url = nturl2path.pathname2url(path)
+                url = pathname2url(path)
             filelink = '<a href="file:%s">%s</a>' % (url, path)
         except TypeError:
             filelink = "(built-in)"
@@ -186,7 +185,7 @@ class DefaultFormatter(pydoc.HTMLDoc):
                     ##						import pdb
                     ##						pdb.set_trace()
                     module = pydoc.safeimport("%s.%s" % (name, modname))
-                    description, documentation = pydoc.splitdoc(inspect.getdoc(module))
+                    description, documentation = pydoc.splitdoc(inspect.getdoc(module) or "")
                     if description:
                         items.append(
                             """%s -- %s"""
@@ -199,7 +198,7 @@ class DefaultFormatter(pydoc.HTMLDoc):
                         items.append(
                             self.modpkglink((modname, name, ispackage, isshadowed))
                         )
-                except Exception:
+                except pydoc.ErrorDuringImport:
                     items.append(
                         self.modpkglink((modname, name, ispackage, isshadowed))
                     )
@@ -344,7 +343,7 @@ class PackageDocumentationGenerator:
                     self.warn(
                         """Unable to import the module %s""" % (repr(self.pending[0]))
                     )
-                except Exception as value:
+                except Exception as value:  # noqa: BLE001 a module that fails to document is recorded in the warnings and the run goes on to the next
                     self.info("""   ... FAILED %s""" % (repr(value)))
                     self.warn(
                         """Unable to import the module %s""" % (repr(self.pending[0]))
@@ -358,15 +357,16 @@ class PackageDocumentationGenerator:
                             packageContext=self,
                         ),
                     )
-                    file = open(
-                        os.path.join(
-                            self.destinationDirectory,
-                            self.pending[0] + ".html",
-                        ),
-                        "w",
+                    target = os.path.join(
+                        self.destinationDirectory,
+                        self.pending[0] + ".html",
                     )
-                    file.write(page)
-                    file.close()
+                    # Renamed into place once written, so no half page is
+                    # left where a finished one belongs.
+                    partial = target + ".partial"
+                    with open(partial, "w") as file:
+                        file.write(page)
+                    os.replace(partial, target)
                     self.completed[self.pending[0]] = object
                 del self.pending[0]
         finally:

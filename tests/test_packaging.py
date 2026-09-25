@@ -1,5 +1,8 @@
 import os
 import unittest
+from importlib import metadata
+
+import pydispatch
 
 class PackagingTest(unittest.TestCase):
     def test_the_declarations_reach_a_consumer(self):
@@ -15,7 +18,6 @@ class PackagingTest(unittest.TestCase):
         data file, and one that is not named in the packaging is one that never
         reaches the wheel.
         """
-        import pydispatch
         marker = os.path.join(os.path.dirname(pydispatch.__file__), 'py.typed')
         assert os.path.exists(marker), marker
 
@@ -33,8 +35,6 @@ class PackagingTest(unittest.TestCase):
         `2.0.9a1` as readily as `2.0.9`, and a pre-release is not a lesser kind
         of release to a resolver.
         """
-        from importlib import metadata
-        import pydispatch
         installed = metadata.version('pydispatcher')
         assert installed == pydispatch.__version__, (
             'the installed metadata says %s and pydispatch.__version__ says %s'

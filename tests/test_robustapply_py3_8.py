@@ -18,10 +18,10 @@ class TestCases(unittest.TestCase):
         moos = []
 
         def foo(a, b, /, c, d, *m, e):
-            moos.append(m)
+            moos.append((a, b, c, d, m, e))
 
         robustApply(foo, 1, 2, 3, 4, 8, e=6)
-        assert moos == [(8,)], moos
+        assert moos == [(1, 2, 3, 4, (8,), 6)], moos
 
     def test_positional_only(self):
         """Test that positional-only errors are properly raised"""

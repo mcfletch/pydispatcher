@@ -5,7 +5,7 @@ import re
 TAG_FINDER = re.compile(r'py(?P<major>\d+)_(?P<minor>\d+)\.py[a-z]*$')
 
 
-def pytest_ignore_collect(collection_path, config):
+def pytest_ignore_collect(collection_path):
     match = TAG_FINDER.search(collection_path.name)
     if match:
         required_major = int(match.group('major'))
