@@ -1,14 +1,14 @@
 """Module implementing error-catching version of send (sendRobust)"""
-from typing import Any as _Anything
+from typing import Any as AnyType
 
 from pydispatch.dispatcher import Any, Anonymous, liveReceivers, getAllReceivers
 from pydispatch.robustapply import robustApply
 
 def sendRobust(
-    signal: _Anything = Any,
-    sender: _Anything = Anonymous,
-    *arguments: _Anything, **named: _Anything
-) -> list[_Anything]:
+    signal: AnyType = Any,
+    sender: AnyType = Anonymous,
+    *arguments: AnyType, **named: AnyType
+) -> list[AnyType]:
     """Send signal from sender to all connected receivers catching errors
 
     signal -- (hashable) signal value, see connect for details
