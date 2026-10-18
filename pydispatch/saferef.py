@@ -2,7 +2,7 @@
 import weakref
 import traceback
 import sys
-from typing import Any, Callable, Optional
+from typing import Any, Callable, ClassVar, Optional
 
 if sys.hexversion >= 0x3000000:
     im_func = '__func__'
@@ -76,8 +76,9 @@ class BoundMethodWeakref(object):
 
     #: Every live reference, by `calculateKey`'s two-tuple of id()s, so that
     #: two references to the same (object, function) pair are one instance.
-    _allInstances: 'weakref.WeakValueDictionary[tuple[int, int], BoundMethodWeakref]' = (
-        weakref.WeakValueDictionary())
+    _allInstances: ClassVar[
+        'weakref.WeakValueDictionary[tuple[int, int], BoundMethodWeakref]'
+    ] = weakref.WeakValueDictionary()
 
     def __new__(cls, target: Any,
                 onDelete: Optional[Callable[[Any], None]] = None,  # noqa: ARG004 __new__ takes the arguments __init__ is called with; __init__ records it
